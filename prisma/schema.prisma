@@ -1,0 +1,163 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String
+  emailVerified DateTime?
+  username      String
+  password      String
+  role          userRole  @default(USER)
+  image         String?
+  background    String?
+  createdAt     DateTime  @default(now())
+  upadtedAt     DateTime  @default(now())
+  sessions      Session[]
+}
+
+enum userRole {
+  USER
+  UPLOADER
+  MOD
+  ADMIN
+}
+
+model UserLibrary {
+  id           Int     @id @default(autoincrement())
+  bookmark     Boolean
+  notification Boolean
+  status       Int     @default(0)
+  rating       Int?
+}
+
+model UserReadHistory {
+  id        Int     @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  userID String
+  chapterID String
+  chapter   Chapter @relation(references: [id], fields: [chapterID], onDelete: Cascade)
+}
+
+model Serie {
+  id          Int          @id @default(autoincrement())
+  title       String
+  synopsis    String
+  description String
+  status      Int
+  adult       Boolean
+  posterImage String?
+  coverImage  String?
+  type        String // Tipo: Novel, Manga, Manwha, etc.
+  mediaType   MediaType // Novel | Manga -> image or text
+  subtype     SerieSubtype // Subtype
+  views       Int          @default(0)
+  createdAt   DateTime     @default(now())
+  upadtedAt   DateTime     @default(now())
+  titles      Title[]
+  genres      Genre[]      @relation("GenreToSerie")
+  authors     Author[]     @relation("AuthorToSerie")
+  tags        Tag[]        @relation("TagToSerie")
+}
+
+enum MediaType {
+  NOVEL
+  MANGA
+}
+
+enum SerieSubtype {
+  MANGA
+  MANHWA
+  MANHUA
+  WEBTOON
+  COMIC
+  WEBNOVEL
+  LIGHTNOVEL
+}
+
+model Chapter {
+  id              String             @id @default(uuid())
+  title           String
+  index           Float
+  volume          Float              @default(0)
+  serieID         Int
+  type            ChapterContentType
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @default(now()) @updatedAt
+  views           Int                @default(0)
+  content         ChapterContent?
+  UserReadHistory UserReadHistory[]
+}
+
+model ChapterContent {
+  id        String  @id @default(uuid())
+  type      Boolean
+  text      String?
+  pages     Page[]
+  chapterID String  @unique
+  chapter   Chapter @relation(fields: [chapterID], references: [id])
+}
+
+model Page {
+  id               String          @id @default(uuid())
+  imageURL         String
+  order            Int
+  width            Int
+  height           Int
+  fileSize         Int
+  chapterContentId String?
+  ChapterContent   ChapterContent? @relation(fields: [chapterContentId], references: [id])
+}
+
+enum ChapterContentType {
+  NOVEL
+  MANGA
+}
+
+model Genre {
+  id     String  @id @default(uuid())
+  name   String  @unique
+  series Serie[] @relation("GenreToSerie")
+}
+
+model Author {
+  id     String  @id @default(uuid())
+  name   String  @unique
+  series Serie[] @relation("AuthorToSerie")
+}
+
+model Tag {
+  id     String  @id @default(uuid())
+  name   String  @unique
+  series Serie[] @relation("TagToSerie")
+}
+
+model Title {
+  id      String @id @default(uuid())
+  title   String
+  type    String
+  serieID Int
+  serie   Serie  @relation(fields: [serieID], references: [id])
+}
+
+
+// F O R U M //
