@@ -2,6 +2,17 @@ import ThemeSwitch from "@/components/ThemeSwitch";
 import Profile from "./Profile";
 
 export default async function NavBar() {
+    const menu = [
+        {
+            title: 'Obras', link: '/', children: [
+                { title: 'Mangas', link: '/' },
+                { title: 'Novels', link: '/' }
+            ]
+        },
+        { title: 'Recentes', link: '/' },
+        { title: 'Fórum', link: '/' },
+        { title: 'Admininstração', link: '/admin' }
+    ];
     return (
         <div className="bg-base-100 flex justify-center text-base-content">
             <div className='navbar max-w-screen-xl'>
@@ -40,18 +51,24 @@ export default async function NavBar() {
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1">
-                        <li>
-                            <details>
-                                <summary>Obras</summary>
-                                <ul className="p-2">
-                                    <li><a>Mangas</a></li>
-                                    <li><a>Novels</a></li>
-                                </ul>
-                            </details>
-                        </li>
-                        <li><a>Recentes</a></li>
-                        <li><a>Fórum</a></li>
-                        <li><a>Admininstração</a></li>
+                        {
+                            menu.map((item, index) => (
+                                item.children ?
+                                <li>
+                                    <details>
+                                        <summary>{item.title}</summary>
+                                        <ul className="p-2">
+                                            {
+                                                item.children.map((child, index) => (
+                                                    <li key={index}><a href={child.link}>{child.title}</a></li>
+                                                ))
+                                            }
+                                        </ul>
+                                    </details>
+                                </li>
+                                : <li key={index}><a href={item.link}>{item.title}</a></li>
+                            ))
+                        }
                     </ul>
                 </div>
                 <div className="navbar-end space-x-3">
@@ -70,7 +87,7 @@ export default async function NavBar() {
                         </svg>
                     </button>
                     <ThemeSwitch />
-                    <Profile/>
+                    <Profile />
                 </div>
             </div>
         </div>
