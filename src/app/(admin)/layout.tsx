@@ -1,3 +1,4 @@
+import Breadcrumb from "@/components/Breadcrumb";
 import Sidebar from "@/components/Sidebar";
 import type { Metadata } from "next";
 export const metadata: Metadata = {

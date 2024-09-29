@@ -63,7 +63,7 @@ model Serie {
   title       String
   synopsis    String
   description String
-  status      Int
+  status      StatusType
   adult       Boolean
   posterImage String?
   coverImage  String?
@@ -77,6 +77,15 @@ model Serie {
   genres      Genre[]      @relation("GenreToSerie")
   authors     Author[]     @relation("AuthorToSerie")
   tags        Tag[]        @relation("TagToSerie")
+}
+
+enum StatusType {
+  COMPLETED
+  ONGOING
+  HIATUS
+  DROPPED
+  ONHOLD
+  PLANNED
 }
 
 enum MediaType {
@@ -134,7 +143,7 @@ enum ChapterContentType {
 }
 
 model Genre {
-  id     String  @id @default(uuid())
+  id     Int  @id @default(autoincrement())
   name   String  @unique
   series Serie[] @relation("GenreToSerie")
 }
@@ -158,6 +167,5 @@ model Title {
   serieID Int
   serie   Serie  @relation(fields: [serieID], references: [id])
 }
-
 
 // F O R U M //
