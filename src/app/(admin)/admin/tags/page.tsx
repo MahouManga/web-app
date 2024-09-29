@@ -1,9 +1,8 @@
-// /app/admin/genres/page.tsx
-import { getGenres } from '@/services/genreService';
 import TagPage from './TagPage';
+import { getTags } from '@/services/tagService';
 
 export default async function Page() {
-  const res = await getGenres();
+  const res = await getTags();
   const data = res.data || [];
 
   return <TagPage data={data} />;

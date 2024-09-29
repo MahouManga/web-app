@@ -1,4 +1,3 @@
-// /app/admin/genres/page.tsx
 import { getGenres } from '@/services/genreService';
 import GenrePage from './GenrePage';
 

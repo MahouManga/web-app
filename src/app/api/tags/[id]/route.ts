@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getGenre, updateGenre, deleteGenre } from '@/services/genreService';
+import { deleteTag, getTag, updateTag } from '@/services/tagService';
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   const { id } = params;
 
   try {
-    const genre = await getGenre(Number(id));
+    const genre = await getTag(id);
 
     if (genre) {
       return NextResponse.json(genre, { status: 200 });
@@ -13,7 +13,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Tag não encontrado.' }, { status: 404 });
     }
   } catch (error) {
-    return NextResponse.json({ error: 'Erro ao obter tag.' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro ao obter gênero.' }, { status: 500 });
   }
 }
 
@@ -22,10 +22,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
   try {
     const genreData = await request.json();
-    const genre = await updateGenre(Number(id), genreData);
+    const genre = await updateTag(id, genreData);
     return NextResponse.json(genre, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Erro ao atualizar tag.' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro ao atualizar Tag.' }, { status: 500 });
   }
 }
 
@@ -33,9 +33,9 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
   const { id } = params;
 
   try {
-    const genre = await deleteGenre(Number(id));
+    const genre = await deleteTag(id);
     return NextResponse.json(genre, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Erro ao deletar tag.' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro ao deletar Tag.' }, { status: 500 });
   }
 }

@@ -4,9 +4,6 @@ import Image from "next/image"; // Para usar imagens otimizadas com Next.js
 export default function Home() {
   return (
     <>
-      {/* Navbar */}
-      <NavBar />
-
       {/* Main Content */}
       <main className="flex flex-col items-center justify-between p-8 bg-gray-900 text-white min-h-screen">
         
