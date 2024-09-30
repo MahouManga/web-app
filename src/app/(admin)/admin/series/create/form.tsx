@@ -1,9 +1,12 @@
 'use client'
 
-import { ChangeEvent, useState } from "react";
-import { MediaType, SerieSubtype, StatusType } from "@prisma/client";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { SerieType, SerieSubtype, StatusType } from "@prisma/client";
+import { IoAdd } from "react-icons/io5";
+import { toast } from "sonner";
+import { useRouter } from "next/router";
 
-const mediaTypes = Object.keys(MediaType).map((key) => ({
+const mediaTypes = Object.keys(SerieType).map((key) => ({
     value: key,
     label: key.charAt(0) + key.slice(1).toLowerCase(), // Formata o label, ex: "NOVEL" -> "Novel"
 }));
@@ -19,6 +22,7 @@ const statusTypes = Object.keys(StatusType).map((key) => ({
 }));
 
 export default function Form() {
+    const router = useRouter()
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
@@ -29,9 +33,9 @@ export default function Form() {
         adult: false,
         mediaType: '',
         subtype: '',
-        genres: [],
-        titles: [],
-        authors: [],
+        genres: [] as any,
+        titles: [] as any,
+        authors: [] as any,
         releasedAt: '',
     })
 
@@ -51,12 +55,85 @@ export default function Form() {
         }
     };
 
+    const handleAddTitle = () => {
+        setFormData({
+            ...formData,
+            titles: [...formData.titles, { title: '', type: '' }],
+        });
+    };
+
+    const handleRemoveTitle = (index: number) => {
+        const titles = formData.titles.filter((_: any, i: any) => i !== index);
+        setFormData({ ...formData, titles });
+    };
+
+    const handleTitleChange = (index: number, e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        const titles = [...formData.titles];
+        titles[index] = { ...titles[index], [name]: value };
+        setFormData({ ...formData, titles });
+    };
+
+    const handleAddAuthor = () => {
+        setFormData({
+            ...formData,
+            authors: [...formData.authors, { name: '' }],
+        });
+    };
+
+    const handleRemoveAuthor = (index: number) => {
+        const authors = formData.authors.filter((_: any, i: any) => i !== index);
+        setFormData({ ...formData, authors });
+    };
+
+    const handleAuthorChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        const authors = [...formData.authors];
+        authors[index] = { ...authors[index], [name]: value };
+        setFormData({ ...formData, authors });
+    };
+
+    const handleGenreClick = (genreId: number) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            genres: prevFormData.genres.includes(genreId)
+                ? prevFormData.genres.filter((id: any) => id !== genreId)
+                : [...prevFormData.genres, genreId],
+        }));
+    };
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('/api/series', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+
+            if (data.error) {
+                toast.error('Erro na criação da obra, \ntem alguma coisa faltando!');
+            } else {
+                toast.success('Obra criada com sucesso!');
+                router.push(`/admin/series/${data.data.id}`);
+            }
+        } catch (error) {
+            console.error('Error submitting novel:', error);
+        }
+    };
+
     return (
-        <div>
-            <div className="bg-base-300 relative shadow-md sm:rounded-lg overflow-hidden">
-                <div className="card-body">
-                    <h2 className="card-title">Adicionar nova Obra</h2>
-                    <form>
+
+        <div className="bg-base-300 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div className="card-body">
+                <h2 className="card-title">Adicionar nova Obra</h2>
+                <form>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="form-control mb-4">
                             <label className="label" htmlFor="title">
                                 <span className="">Titulo</span>
@@ -71,107 +148,198 @@ export default function Form() {
                                 required
                             />
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="form-control mb-4">
-                                <label className="label" htmlFor="status">
-                                    <span className="label-text">Tipo de Media</span>
-                                </label>
-                                <div className="input-group">
-                                    <select
-                                        id="mediaType"
-                                        name="mediaType"
-                                        className="select select-bordered w-full"
-                                        value={formData.mediaType}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value=""> Selecione o Tipo </option>
-                                        {mediaTypes.map((type) => (
-                                            <option key={type.value} value={type.value}>
-                                                {type.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                        <div className="form-control mb-4">
+                            <label className="label" htmlFor="status">
+                                <span className="label-text">Status da Obra</span>
+                            </label>
+                            <div className="input-group">
+                                <select
+                                    id="mediaType"
+                                    name="mediaType"
+                                    className="select select-bordered w-full"
+                                    value={formData.status}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value=""> Selecione o Tipo </option>
+                                    {statusTypes.map((type) => (
+                                        <option key={type.value} value={type.value}>
+                                            {type.label}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-
-                            <div className="form-control mb-4">
-                                <label className="label" htmlFor="status">
-                                    <span className="label-text">Subtipo</span>
-                                </label>
-                                <div className="input-group">
-                                    <select
-                                        id="subtype"
-                                        name="subtype"
-                                        className="select select-bordered w-full"
-                                        value={formData.subtype}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value=""> Qual o SubTipo </option>
-                                        {subTypes.map((type) => (
-                                            <option key={type.value} value={type.value}>
-                                                {type.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                        </div>
+                        <div className="form-control mb-4">
+                            <label className="label" htmlFor="status">
+                                <span className="label-text">Tipo de Media</span>
+                            </label>
+                            <div className="input-group">
+                                <select
+                                    id="mediaType"
+                                    name="mediaType"
+                                    className="select select-bordered w-full"
+                                    value={formData.mediaType}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value=""> Selecione o Tipo </option>
+                                    {mediaTypes.map((type) => (
+                                        <option key={type.value} value={type.value}>
+                                            {type.label}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
 
                         <div className="form-control mb-4">
-                            <label className="label" htmlFor="synopsis">
-                                <span className="label-text">Sinopse</span>
+                            <label className="label" htmlFor="status">
+                                <span className="label-text">Subtipo</span>
                             </label>
-                            <textarea
-                                id="synopsis"
-                                name="synopsis"
-                                className="textarea textarea-bordered"
-                                value={formData.synopsis}
-                                onChange={handleChange}
-                                required
-                            ></textarea>
+                            <div className="input-group">
+                                <select
+                                    id="subtype"
+                                    name="subtype"
+                                    className="select select-bordered w-full"
+                                    value={formData.subtype}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value=""> Qual o SubTipo </option>
+                                    {subTypes.map((type) => (
+                                        <option key={type.value} value={type.value}>
+                                            {type.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-control mb-4">
+                        <label className="label" htmlFor="synopsis">
+                            <span className="label-text">Sinopse</span>
+                        </label>
+                        <textarea
+                            id="synopsis"
+                            name="synopsis"
+                            className="textarea textarea-bordered"
+                            value={formData.synopsis}
+                            onChange={handleChange}
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div className="form-control mb-4">
+                        <label className="label" htmlFor="description">
+                            <span className="label-text">Descrição</span>
+                        </label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            className="textarea textarea-bordered"
+                            value={formData.description}
+                            onChange={handleChange}
+                            required
+                        ></textarea>
+                    </div>
+
+                    {/* ReleasedAt */}
+                    <div className="form-control mb-4">
+                        <label className="label" htmlFor="releasedAt">
+                            <span className="label-text">
+                                Release Date
+                                <div className="tooltip tooltip-right" data-tip="Data de lançamento da obra.">
+                                    <span className="text-info cursor-pointer ml-2">?</span>
+                                </div></span>
+                        </label>
+                        <input
+                            type="number"
+                            min="1900"
+                            max="2299"
+                            step="1"
+                            id="releasedAt"
+                            name="releasedAt"
+                            className="input input-bordered"
+                            value={formData.releasedAt}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    {/* Títulos */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="form-control mb-4">
+                            <label className="label" htmlFor="titles">
+                                <span className="label-text">Titles</span>
+                                <button onClick={handleAddTitle}
+                                    type="button"
+                                    className="flex items-center justify-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                                    <IoAdd className="w-5 h-5 mr-2" />
+                                    Add New
+                                </button>
+                            </label>
+                            {formData.titles.map((title: any, index: number) => (
+                                <div key={index} className="flex label space-x-2 mb-2">
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        placeholder="Title"
+                                        className="input input-bordered w-full"
+                                        value={title.title}
+                                        onChange={(e) => handleTitleChange(index, e)}
+                                        required
+                                    />
+                                    <select
+                                        name="type"
+                                        className="select select-bordered w-full"
+                                        value={title.type}
+                                        onChange={(e) => handleTitleChange(index, e)}
+                                        required
+                                    >
+                                        <option value="">Select Type</option>
+                                        <option value="default">Default</option>
+                                        <option value="synonym">Synonym</option>
+                                        <option value="portuguese">Português</option>
+                                        <option value="english">English</option>
+                                        <option value="japanese">japanese</option>
+                                        <option value="korean">Korean</option>
+                                    </select>
+                                    <button type="button" className="btn btn-error" onClick={() => handleRemoveTitle(index)}>Remove</button>
+                                </div>
+                            ))}
                         </div>
 
+                        {/* Autores */}
                         <div className="form-control mb-4">
-                            <label className="label" htmlFor="description">
-                                <span className="label-text">Descrição</span>
+                            <label className="label" htmlFor="titles">
+                                <span className="label-text">Authors</span>
+                                <button onClick={handleAddAuthor}
+                                    type="button"
+                                    className="flex items-center justify-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                                    <IoAdd className="w-5 h-5 mr-2" />
+                                    Add New
+                                </button>
                             </label>
-                            <textarea
-                                id="description"
-                                name="description"
-                                className="textarea textarea-bordered"
-                                value={formData.description}
-                                onChange={handleChange}
-                                required
-                            ></textarea>
+                            {formData.authors.map((author: any, index: number) => (
+                                <div key={index} className="flex label space-x-2 mb-2">
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        placeholder="Author Name"
+                                        className="input input-bordered w-full"
+                                        value={author.name}
+                                        onChange={(e) => handleAuthorChange(index, e)}
+                                        required
+                                    />
+                                    <button type="button" className="btn btn-error" onClick={() => handleRemoveAuthor(index)}>Remove</button>
+                                </div>
+                            ))}
                         </div>
-
-                        {/* ReleasedAt */}
-                        <div className="form-control mb-4">
-                            <label className="label" htmlFor="releasedAt">
-                                <span className="label-text">
-                                    Release Date
-                                    <div className="tooltip tooltip-right" data-tip="Data de lançamento da obra.">
-                                        <span className="text-info cursor-pointer ml-2">?</span>
-                                    </div></span>
-                            </label>
-                            <input
-                                type="number"
-                                min="1900"
-                                max="2299"
-                                step="1"
-                                id="releasedAt"
-                                name="releasedAt"
-                                className="input input-bordered"
-                                value={formData.releasedAt}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </form>
-                </div>
-            </div >
+                    </div>
+                </form>
+            </div>
         </div >
     );
 }

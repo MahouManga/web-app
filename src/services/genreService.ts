@@ -24,7 +24,7 @@ interface ErrorData {
     error?: any;
 }
 
-export const getGenres = async (): Promise<GenreDataList> => {
+/*export const getGenres = async (): Promise<GenreDataList> => {
     try {
         const genres = await prisma.genre.findMany();
         return { data: genres };
@@ -35,6 +35,15 @@ export const getGenres = async (): Promise<GenreDataList> => {
                 status: 500,
             }
         };
+    }
+}*/
+
+export const getGenres = async (): Promise<Genre[]> => {
+    try {
+        const genres = await prisma.genre.findMany();
+        return genres;
+    } catch (error) {
+        throw new Error("Failed to fetch genres");
     }
 }
 

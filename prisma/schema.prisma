@@ -51,11 +51,11 @@ model UserLibrary {
 }
 
 model UserReadHistory {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  userID String
+  userID    String
   chapterID String
-  chapter   Chapter @relation(references: [id], fields: [chapterID], onDelete: Cascade)
+  chapter   Chapter  @relation(references: [id], fields: [chapterID], onDelete: Cascade)
 }
 
 model Serie {
@@ -64,11 +64,10 @@ model Serie {
   synopsis    String
   description String
   status      StatusType
-  adult       Boolean
+  adult       Boolean      @default(false)
   posterImage String?
   coverImage  String?
-  type        String // Tipo: Novel, Manga, Manwha, etc.
-  mediaType   MediaType // Novel | Manga -> image or text
+  type        SerieType // Novel | Manga -> image or text
   subtype     SerieSubtype // Subtype
   views       Int          @default(0)
   createdAt   DateTime     @default(now())
@@ -80,7 +79,7 @@ model Serie {
 }
 
 enum StatusType {
-  COMPLETED
+  Completo
   ONGOING
   HIATUS
   DROPPED
@@ -88,7 +87,7 @@ enum StatusType {
   PLANNED
 }
 
-enum MediaType {
+enum SerieType {
   NOVEL
   MANGA
 }
@@ -143,7 +142,7 @@ enum ChapterContentType {
 }
 
 model Genre {
-  id     Int  @id @default(autoincrement())
+  id     Int     @id @default(autoincrement())
   name   String  @unique
   series Serie[] @relation("GenreToSerie")
 }
