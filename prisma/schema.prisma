@@ -61,9 +61,10 @@ model UserReadHistory {
 model Serie {
   id          Int          @id @default(autoincrement())
   title       String
+  slug        String
   synopsis    String
   description String
-  status      StatusType
+  status      Int
   adult       Boolean      @default(false)
   posterImage String?
   coverImage  String?
@@ -71,20 +72,12 @@ model Serie {
   subtype     SerieSubtype // Subtype
   views       Int          @default(0)
   createdAt   DateTime     @default(now())
-  upadtedAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now())
   titles      Title[]
   genres      Genre[]      @relation("GenreToSerie")
   authors     Author[]     @relation("AuthorToSerie")
   tags        Tag[]        @relation("TagToSerie")
-}
-
-enum StatusType {
-  Completo
-  ONGOING
-  HIATUS
-  DROPPED
-  ONHOLD
-  PLANNED
+  chapters    Chapter[]
 }
 
 enum SerieType {
@@ -107,11 +100,12 @@ model Chapter {
   title           String
   index           Float
   volume          Float              @default(0)
-  serieID         Int
   type            ChapterContentType
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @default(now()) @updatedAt
   views           Int                @default(0)
+  serieID         Int
+  serie           Serie?             @relation(fields: [serieID], references: [id], onDelete: Cascade)
   content         ChapterContent?
   UserReadHistory UserReadHistory[]
 }
@@ -122,7 +116,7 @@ model ChapterContent {
   text      String?
   pages     Page[]
   chapterID String  @unique
-  chapter   Chapter @relation(fields: [chapterID], references: [id])
+  chapter   Chapter @relation(fields: [chapterID], references: [id], onDelete: Cascade)
 }
 
 model Page {
@@ -133,7 +127,7 @@ model Page {
   height           Int
   fileSize         Int
   chapterContentId String?
-  ChapterContent   ChapterContent? @relation(fields: [chapterContentId], references: [id])
+  ChapterContent   ChapterContent? @relation(fields: [chapterContentId], references: [id], onDelete: Cascade)
 }
 
 enum ChapterContentType {

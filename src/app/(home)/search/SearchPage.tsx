@@ -11,26 +11,7 @@ export default function SearchPage({ genres }: { genres: Genre[] }) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [data, setData] = useState<any[]>([
-        {
-            id: 1,
-            title: 'Novel 1',
-            description: 'Description 1',
-            status: 'Status 1',
-            genres: ['Genre 1', 'Genre 2'],
-            imageUrl: 'https://via.placeholder.com/150',
-            author: 'Author 1'
-        },
-        {
-            id: 2,
-            title: 'Novel 2',
-            description: 'Description 2',
-            status: 2,
-            genres: ['Genre 1', 'Genre 2'],
-            imageUrl: 'https://via.placeholder.com/150',
-            author: 'Author 2',
-        }
-    ]);
+    const [data, setData] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const query = {
@@ -53,7 +34,7 @@ export default function SearchPage({ genres }: { genres: Genre[] }) {
                     genre: query.genre,
                 });
 
-                const res = await fetch(`/api/search?${params.toString()}`);
+                const res = await fetch(`/api/series?${params.toString()}`);
                 const result = await res.json();
                 setData(result.data || []);
             } catch (error) {

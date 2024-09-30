@@ -1,10 +1,11 @@
 'use client'
 
 import { ChangeEvent, FormEvent, useState } from "react";
-import { SerieType, SerieSubtype, StatusType } from "@prisma/client";
+import { SerieType, SerieSubtype } from "@prisma/client";
 import { IoAdd } from "react-icons/io5";
 import { toast } from "sonner";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { getStatusText } from "@/utils/projectStatus";
 
 const mediaTypes = Object.keys(SerieType).map((key) => ({
     value: key,
@@ -12,11 +13,6 @@ const mediaTypes = Object.keys(SerieType).map((key) => ({
 }));
 
 const subTypes = Object.keys(SerieSubtype).map((key) => ({
-    value: key,
-    label: key.charAt(0) + key.slice(1).toLowerCase(), // Formata o label, ex: "NOVEL" -> "Novel"
-}));
-
-const statusTypes = Object.keys(StatusType).map((key) => ({
     value: key,
     label: key.charAt(0) + key.slice(1).toLowerCase(), // Formata o label, ex: "NOVEL" -> "Novel"
 }));
@@ -29,9 +25,9 @@ export default function Form() {
         synopsis: '',
         description: '',
         readingTips: '',
-        status: 1,
+        status: '',
         adult: false,
-        mediaType: '',
+        type: '',
         subtype: '',
         genres: [] as any,
         titles: [] as any,
@@ -154,19 +150,19 @@ export default function Form() {
                             </label>
                             <div className="input-group">
                                 <select
-                                    id="mediaType"
-                                    name="mediaType"
+                                    id="status"
+                                    name="status"
                                     className="select select-bordered w-full"
                                     value={formData.status}
                                     onChange={handleChange}
                                     required
                                 >
                                     <option value=""> Selecione o Tipo </option>
-                                    {statusTypes.map((type) => (
-                                        <option key={type.value} value={type.value}>
-                                            {type.label}
-                                        </option>
-                                    ))}
+                                    <option value={1}>{getStatusText(1)}</option>
+                                    <option value={2}>{getStatusText(2)}</option>
+                                    <option value={3}>{getStatusText(3)}</option>
+                                    <option value={4}>{getStatusText(4)}</option>
+                                    <option value={5}>{getStatusText(5)}</option>
                                 </select>
                             </div>
                         </div>
@@ -176,10 +172,10 @@ export default function Form() {
                             </label>
                             <div className="input-group">
                                 <select
-                                    id="mediaType"
-                                    name="mediaType"
+                                    id="type"
+                                    name="type"
                                     className="select select-bordered w-full"
-                                    value={formData.mediaType}
+                                    value={formData.type}
                                     onChange={handleChange}
                                     required
                                 >
@@ -337,6 +333,11 @@ export default function Form() {
                                 </div>
                             ))}
                         </div>
+                    </div>
+
+                    {/* Botão de Submit */}
+                    <div className="form-control mt-6 flex items-center">
+                        <button type="submit" onClick={handleSubmit} className="btn btn-primary w-full md:w-1/4">Add Novel</button>
                     </div>
                 </form>
             </div>
