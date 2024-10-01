@@ -24,7 +24,7 @@ interface ErrorData {
     error?: any;
 }
 
-/*export const getGenres = async (): Promise<GenreDataList> => {
+export const getGenres = async (): Promise<GenreDataList> => {
     try {
         const genres = await prisma.genre.findMany();
         return { data: genres };
@@ -36,9 +36,9 @@ interface ErrorData {
             }
         };
     }
-}*/
+}
 
-export const getGenres = async (): Promise<Genre[]> => {
+export const getGenres2 = async (): Promise<Genre[]> => {
     try {
         const genres = await prisma.genre.findMany();
         return genres;

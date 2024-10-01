@@ -11,7 +11,7 @@ export default async function NavBar() {
             ]
         },
         { title: 'Recentes', link: '/' },
-        { title: 'Fórum', link: '/' },
+        { title: 'Fórum', link: '/forum' },
         { title: 'Admininstração', link: '/admin' }
     ];
     return (
