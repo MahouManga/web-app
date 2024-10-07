@@ -5,13 +5,13 @@ export default function Home() {
   return (
     <>
       {/* Main Content */}
-      <main className="flex flex-col items-center justify-between p-8 bg-base-300 text-white min-h-screen">
+      <main className="flex flex-col items-center justify-between p-8 bg-base-100 text-base-content min-h-screen">
         
         {/* Banner Section */}
         <section className="w-full mb-8">
-          <div className="relative bg-yellow-500 rounded-lg p-6">
+          <div className="relative bg-base-200 rounded-lg p-6">
             <Image
-              src="/banner.png" // Certifique-se de ter a imagem em public/banner.png
+              src="/noImage.jpg" // Certifique-se de ter a imagem em public/banner.png
               alt="Banner"
               width={1920}
               height={400}
@@ -31,9 +31,9 @@ export default function Home() {
           <h2 className="text-2xl font-bold mb-6">Lançamentos</h2>
           <div className="grid grid-cols-6 gap-4">
             {/* Card de Mangá 1 */}
-            <div className=" p-4 rounded-lg text-center">
+            <div className="bg-base-300 p-4 rounded-lg text-center items-center">
               <Image
-                src="/one-piece.jpg" // Imagem do mangá (coloque as imagens em public/)
+                src="/noImage.jpg" // Imagem do mangá (coloque as imagens em public/)
                 alt="One Piece"
                 width={200}
                 height={300}
@@ -41,13 +41,12 @@ export default function Home() {
               />
               <h3 className="font-bold text-lg">One Piece</h3>
               <p>Cap 1220</p>
-              <p className="text-green-400">Novo</p>
             </div>
 
             {/* Card de Mangá 2 */}
-            <div className="bg-gray-800 p-4 rounded-lg text-center">
+            <div className="bg-base-300 p-4 rounded-lg text-center">
               <Image
-                src="/naruto.jpg" // Outra imagem de mangá
+                src="/noImage.jpg" // Outra imagem de mangá
                 alt="Naruto"
                 width={200}
                 height={300}
@@ -55,7 +54,6 @@ export default function Home() {
               />
               <h3 className="font-bold text-lg">Naruto</h3>
               <p>Cap 700</p>
-              <p className="text-green-400">Novo</p>
             </div>
 
             {/* Adicione mais cards aqui conforme necessário */}
@@ -64,16 +62,16 @@ export default function Home() {
 
         {/* Sidebar Section (opcional) */}
         <aside className="w-full mt-8">
-          <div className="bg-gray-800 p-4 rounded-lg">
+          <div className="bg-base-300 p-4 rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Mais Vistos</h2>
             <ul className="space-y-2">
               <li className="flex justify-between">
                 <span>My Seven Sister Spoiled Me a Lot Ch.6</span>
-                <span className="text-gray-400">5 dias</span>
+                <span className="">5 dias</span>
               </li>
               <li className="flex justify-between">
                 <span>Hero Killer Ch.10</span>
-                <span className="text-gray-400">4 dias</span>
+                <span className="">4 dias</span>
               </li>
               {/* Adicione mais itens da sidebar aqui */}
             </ul>
