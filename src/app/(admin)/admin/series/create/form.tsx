@@ -336,8 +336,14 @@ export default function Form() {
                     </div>
 
                     {/* Botão de Submit */}
-                    <div className="form-control mt-6 flex items-center">
-                        <button type="submit" onClick={handleSubmit} className="btn btn-primary w-full md:w-1/4">Add Novel</button>
+                    <div className="form-control mt-6 flex items-center space-y-4">
+                    <button type="submit" onClick={handleSubmit} className="btn btn-primary w-full md:w-1/4">Add Novel</button>
+                    <button type="submit" onClick={handleSubmit} className="btn btn-secondary w-full md:w-1/4">Add Novel</button>
+                    <button type="submit" onClick={handleSubmit} className="btn btn-info w-full md:w-1/4">Add Novel</button>
+                    <button type="submit" onClick={handleSubmit} className="btn btn-accent w-full md:w-1/4">Add Novel</button>
+                    <button type="submit" onClick={handleSubmit} className="btn btn-warning w-full md:w-1/4">Add Novel</button>
+                    <button type="submit" onClick={handleSubmit} className="btn btn-success w-full md:w-1/4">Add Novel</button>
+                    <button type="submit" onClick={handleSubmit} className="btn btn-error w-full md:w-1/4">Add Novel</button>
                     </div>
                 </form>
             </div>

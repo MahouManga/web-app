@@ -17,18 +17,18 @@ export interface SeriePlus extends Serie {
     }
 }
 
-interface ErrorData {
+export interface ErrorData {
     message: string;
     status: number;
     error?: any;
 }
 
-interface SerieData {
+export interface SerieData {
     data?: SeriePlus;
     error?: ErrorData;
 }
 
-interface SerieCreateInput {
+export interface SerieCreateInput {
     slug: string;
     title: string;
     synopsis: string;

@@ -74,10 +74,10 @@ const config: Config = {
 					"primary-content": "#060715",
 					"secondary": "#f471b5",
 					"secondary-content": "#14040c",
-					"accent": "#393939",
-					"accent-content": "#ffffff",
-					"neutral": "#202020",
-					"neutral-content": "#d9d9d9",
+					"accent": "#00188F",
+					"accent-content": "#58c7f3",
+					"neutral": "#1e293b",
+					"neutral-content": "#cdd0d5",
 					"base-100": "#0F172A",
 					"base-content": "#e0e0e0",
 					"info": "#005063",
@@ -94,7 +94,7 @@ const config: Config = {
 			{
 				light: {
 					"primary": "#4a00ff",
-					"primary-content": "#f9fafb",
+					"primary-content": "#EBF2FF",
 					"secondary": "#ff00d3",
 					"secondary-content": "#fff8fd",
 					"accent": "#00188F",

@@ -100,7 +100,7 @@ export default function SearchInput({ genres, query, route }: SearchInputProps) 
                             <option value="asc">Crescente</option>
                             <option value="desc">Decrescente</option>
                         </select>
-                        <button type="submit" className="btn btn-secondary">
+                        <button type="submit" className="btn btn-primary">
                             Pesquisar
                         </button>
                     </div>

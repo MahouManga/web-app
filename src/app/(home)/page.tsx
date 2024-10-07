@@ -31,7 +31,7 @@ export default function Home() {
           <h2 className="text-2xl font-bold mb-6">Lançamentos</h2>
           <div className="grid grid-cols-6 gap-4">
             {/* Card de Mangá 1 */}
-            <div className="bg-base-300 p-4 rounded-lg text-center items-center">
+            <div className="bg-primary-content p-4 rounded-lg text-center items-center">
               <Image
                 src="/noImage.jpg" // Imagem do mangá (coloque as imagens em public/)
                 alt="One Piece"
@@ -44,7 +44,7 @@ export default function Home() {
             </div>
 
             {/* Card de Mangá 2 */}
-            <div className="bg-base-300 p-4 rounded-lg text-center">
+            <div className="bg-primary-content p-4 rounded-lg text-center">
               <Image
                 src="/noImage.jpg" // Outra imagem de mangá
                 alt="Naruto"
@@ -62,7 +62,7 @@ export default function Home() {
 
         {/* Sidebar Section (opcional) */}
         <aside className="w-full mt-8">
-          <div className="bg-base-300 p-4 rounded-lg">
+          <div className="bg-base-200 p-4 rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Mais Vistos</h2>
             <ul className="space-y-2">
               <li className="flex justify-between">

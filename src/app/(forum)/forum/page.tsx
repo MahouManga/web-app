@@ -52,18 +52,18 @@ const ForumPage = () => {
       {/* Seção de Estatísticas de Usuários - Fixada no Rodapé */}
       <div className="bg-base-300 p-4 rounded-lg shadow mt-6 absolute bottom-0 w-full">
         <h2 className="text-2xl font-semibold mb-4">Estatísticas de Usuários</h2>
-        <div className="flex justify-between text-white">
+        <div className="flex justify-between">
           <div>
             <h3 className="text-lg font-semibold">821</h3>
-            <p className="text-sm text-gray-400">Membros</p>
+            <p className="text-sm">Membros</p>
           </div>
           <div>
             <h3 className="text-lg font-semibold">551</h3>
-            <p className="text-sm text-gray-400">Online</p>
+            <p className="text-sm">Online</p>
           </div>
           <div>
             <h3 className="text-lg font-semibold">Henrique</h3>
-            <p className="text-sm text-gray-400">Membro</p>
+            <p className="text-sm">Membro</p>
           </div>
         </div>
       </div>

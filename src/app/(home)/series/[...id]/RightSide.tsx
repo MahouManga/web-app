@@ -6,16 +6,22 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { IoBook, IoReader } from 'react-icons/io5';
 import { HiOutlineSwitchVertical } from 'react-icons/hi';
+import { SeriePlus } from '@/services/serieService';
+import { getStatusText } from '@/utils/projectStatus';
 
-export default function RightSide() {
+export default function RightSide({ serie }: { serie: SeriePlus }) {
   const [tab, setTab] = useState('About');
   const [isDescending, setIsDescending] = useState(false);
 
   // Sample data for chapters
   const chapters = [
-    { id: 1, volume: 1, index: 1, name: 'Capítulo 1', date: '2023-01-01' },
-    { id: 2, volume: 1, index: 2, name: 'Capítulo 2', date: '2023-01-02' },
-    // Add more chapters as needed
+    { id: 1, volume: 1, index: 1, name: 'O Fim de tudo?', date: '2023-01-01' },
+    { id: 2, volume: 1, index: 2, name: 'Renascendo em uma nova familia', date: '2023-01-02' },
+    { id: 3, volume: 1, index: 3, name: 'O Começo da Vingança', date: '2023-01-03' },
+    { id: 4, volume: 1, index: 4, name: 'Talento e Poder', date: '2023-01-04' },
+    { id: 5, volume: 1, index: 5, name: '', date: '2023-01-05' },
+    { id: 5, volume: 1, index: 6, name: '', date: '2023-01-05' },
+    { id: 5, volume: 1, index: 7, name: '', date: '2023-01-05' },
   ];
 
   // Sorting chapters
@@ -24,16 +30,16 @@ export default function RightSide() {
   });
 
   return (
-    <div className='col-span-12 h-full self-end lg:col-span-9 rounded p-4 z-10 flex flex-col gap-3 w-full'>
+    <div className='col-span-12 h-full self-end lg:col-span-9 rounded p-4 z-10 flex flex-col gap-3 w-full text-base-content'>
       <div className='flex flex-col gap-2 items-center lg:items-start'>
         <div className='flex flex-row gap-3 items-center flex-wrap'>
-          <h1 className='text-xl md:text-3xl text-foreground font-bold text-center lg:text-left inline'>Título da Série</h1>
+          <h1 className='text-xl md:text-3xl font-bold text-center lg:text-left inline'>{serie.title}</h1>
         </div>
         <div className='flex flex-row gap-3 items-center flex-wrap'>
-          <span className="text-[10px] font-bold text-foreground-100 px-2 py-1 rounded uppercase text-secondary bg-secondary-content">
-            Em Andamento
+          <span className="text-[10px] font-bold px-2 py-1 rounded uppercase text-secondary bg-secondary-content">
+            {getStatusText(serie.status)}
           </span>
-          <span className='text-muted-foreground text-base'>Títulos Alternativos</span>
+          <span className='text-base'>{serie.titles?.map((a) => a.title).join(', ')}</span>
         </div>
       </div>
       <div className='container mx-auto'>
@@ -69,9 +75,9 @@ export default function RightSide() {
               <div className='mt-2'>
                 <p>Você pode clicar em uma categoria ou tag para pesquisar por ela.</p>
                 <div className='flex flex-wrap my-3'>
-                  <a className='btn btn-secondary text-secondary-content mr-5 mt-2' href='#' rel='tag'>Ação</a>
-                  <a className='btn btn-secondary text-secondary-content mr-5 mt-2' href='#' rel='tag'>Aventura</a>
-                  <a className='btn btn-secondary text-secondary-content mr-5 mt-2' href='#' rel='tag'>Fantasia</a>
+                  {serie.genres?.map((genre) => (
+                    <a className='btn btn-secondary text-secondary-content mr-5 mt-2' href='#' rel='tag'>{genre.name}</a>
+                  ))}
                 </div>
                 <div className="bg-base-content/10 mx-1 my-8 h-px"></div>
               </div>
@@ -79,17 +85,17 @@ export default function RightSide() {
             <section className="mt-4">
               <h2 className="text-xl font-bold">Sinopse</h2>
               <pre className="mt-2 whitespace-pre-wrap">
-                Aqui vai a sinopse da série.
+                {serie.synopsis}
               </pre>
               <div className="bg-base-content/10 mx-1 my-8 h-px"></div>
             </section>
-            <section className="mt-4">
+            {serie.description && <section className="mt-4">
               <h2 className="text-xl font-bold">Detalhes</h2>
               <pre className="mt-2 whitespace-pre-wrap">
-                Aqui vão os detalhes da série.
+                {serie.description}
               </pre>
               <div className="bg-base-content/10 mx-1 my-8 h-px"></div>
-            </section>
+            </section>}
           </div>
         )}
         {tab === 'Chapters' && (
@@ -107,7 +113,10 @@ export default function RightSide() {
                   </div>
                   <div className="flex-grow w-[10%] xl:w-[60%]">
                     <Link href="#" className="flex justify-between items-center">
-                      <p className="font-semibold truncate">{chapter.name}</p>
+                      <div className='truncate flex space-x-3'>
+                        <p className="font-semibold">Cap. {chapter.index}</p>
+                        {chapter.name.length > 0 ? <span className='opacity-65 text-neutral-content'>{chapter.name}</span> : ''}
+                      </div>
                     </Link>
                   </div>
                   <div className="flex-shrink-0 w-[20%] xl:w-[25%] text-right">
