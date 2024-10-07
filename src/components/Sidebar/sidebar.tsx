@@ -39,7 +39,7 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                         {Menus.map((Menu, index) => (
                             <Link href={Menu.link} key={index}>
                                 <li
-                                    className={`flex hover:bg-primary-content p-2 rounded-md cursor-pointer hover:bg-light-white text-sm items-center gap-x-4 
+                                    className={`flex hover:bg-primary p-2 rounded-md cursor-pointer text-sm items-center gap-x-4 
                                         ${Menu.gap ? "mt-9" : "mt-2"} ${index === 0 && "bg-light-white"
                                         } `}
                                 >

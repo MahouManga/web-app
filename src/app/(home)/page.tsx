@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       {/* Main Content */}
-      <main className="flex flex-col items-center justify-between p-8 bg-gray-900 text-white min-h-screen">
+      <main className="flex flex-col items-center justify-between p-8 bg-base-300 text-white min-h-screen">
         
         {/* Banner Section */}
         <section className="w-full mb-8">
@@ -31,7 +31,7 @@ export default function Home() {
           <h2 className="text-2xl font-bold mb-6">Lançamentos</h2>
           <div className="grid grid-cols-6 gap-4">
             {/* Card de Mangá 1 */}
-            <div className="bg-gray-800 p-4 rounded-lg text-center">
+            <div className=" p-4 rounded-lg text-center">
               <Image
                 src="/one-piece.jpg" // Imagem do mangá (coloque as imagens em public/)
                 alt="One Piece"
