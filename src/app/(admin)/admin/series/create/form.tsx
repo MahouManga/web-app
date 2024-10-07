@@ -125,7 +125,7 @@ export default function Form() {
 
     return (
 
-        <div className="bg-primary relative shadow-md sm:rounded-lg overflow-hidden">
+        <div className="bg-base-300 relative shadow-md sm:rounded-lg overflow-hidden">
             <div className="card-body">
                 <h2 className="card-title">Adicionar nova Obra</h2>
                 <form>

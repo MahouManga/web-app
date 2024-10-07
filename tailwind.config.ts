@@ -29,7 +29,7 @@ const config: Config = {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))'
 				},
-				primary: {
+				/*primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
 				},
@@ -48,7 +48,7 @@ const config: Config = {
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
 					foreground: 'hsl(var(--destructive-foreground))'
-				},
+				},*/
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -70,7 +70,7 @@ const config: Config = {
 		themes: [
 			{
 				dark: {
-					"primary": "#1378CC",
+					"primary": "#116EBB",
 					"primary-content": "#ffffff",
 					"secondary": "#2b2b2b",
 					"secondary-content": "#e6e6e6",
