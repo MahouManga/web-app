@@ -138,6 +138,7 @@ export const getSerie = async (id: number): Promise<SerieData> => {
         return {
             error: {
                 message: "Error fetching serie",
+                error: error,
                 status: 500,
             },
         };

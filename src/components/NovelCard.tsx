@@ -6,7 +6,7 @@ import {getStatusText} from '@/utils/projectStatus';
 import Link from 'next/link';
 import NewBadge from '@/components/NewBadge';
 
-export default function NovelCard({ novel }: { novel: any }) {
+export default function NovelCard({ novel, link }: { novel: any, link?: string }) {
   const imageSrc = novel.posterImage || '/noImage.jpg';
 
   return (
@@ -24,7 +24,7 @@ export default function NovelCard({ novel }: { novel: any }) {
             </span>
           )}
         </div>
-        <Link href={`/series/${novel.id}/${novel.slug}`} className="h-52 w-36">
+        <Link href={link || `/series/${novel.id}/${novel.slug}`} className="h-52 w-36">
           <Image
             alt={novel.title}
             src={imageSrc}
@@ -37,7 +37,7 @@ export default function NovelCard({ novel }: { novel: any }) {
         </Link>
       </div>
       <div className="flex justify-center items-center h-[50px] mb-1 mt-2 px-2">
-        <Link href={`/series/${novel.id}/${novel.slug}`}>
+        <Link href={link || `/series/${novel.id}/${novel.slug}`}>
           <p className="text-base font-semibold line-clamp-2">{novel.title}</p>
         </Link>
       </div>
