@@ -14,7 +14,7 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
         { title: "Tags", src: IoPricetagSharp, link: '/admin/tags' },
     ];
 
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     return (
         <div className="flex text-base-content bg-base-300">
             <div className={` ${open ? "w-64" : "w-20 "} fixed flex flex-col bg-base-300 h-screen p-5 pt-8 duration-300 justify-between`}>

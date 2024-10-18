@@ -97,7 +97,7 @@ export default function SeriePage({ serie, chapters }: any) {
                         </div>
                     ))}
                 </div>
-                <Link href={`/admin/series/${serieData.id}/chapter/new`}>
+                <Link href={`/admin/series/${serieData.id}/new`}>
                     <button className="btn btn-circle btn-success fixed bottom-4 right-4">
                         <span className="material-icons">
                             <IoAdd size={30} />

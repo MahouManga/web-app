@@ -7,3 +7,9 @@ export function getChapters(id: number): Promise<Chapter[]> {
         where: { serieID: id }
     });
 }
+
+export function getChapterID(id: string): Promise<Chapter | null> {
+    return prisma.chapter.findUnique({
+        where: { id }
+    });
+}

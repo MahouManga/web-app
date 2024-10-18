@@ -18,6 +18,5 @@ export default async function Page({ params }: { params: Params }) {
             Serie not found
         </div>)
     }
-    console.log(chapters)
     return (<SeriePage serie={serie.data} chapters={chapters} />);
 }
