@@ -1,20 +1,19 @@
 'use client';
 
 import { getStatusText } from "@/utils/projectStatus";
-import { Chapter, Serie } from "@prisma/client";
+import { Chapter, Serie, User } from "@prisma/client";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import MangaEditor from "./MangaEditor";
 import NovelEditor from "./NovelEditor";
 
-export default function ChapterEdit({ serie, chapter, chapterID }: any) {
-    const [editorState, setEditorState] = useState<string>('')
+export default function ChapterEdit({ user, serie, chapter, chapterID, }: any) {
+    const [editorState, setEditorState] = useState<string>(serie.type)
     const [formData, setFormData] = useState({
-        title: '',
-        index: 0,
-        volume: 0,
+        title: chapter ? chapter.title : '',
+        index: chapter ? chapter.index : 0,
+        volume: chapter ? chapter.volume : 0,
         creatorID: 0,
-        type: '',
         serieID: serie.id
     })
 
@@ -137,6 +136,7 @@ export default function ChapterEdit({ serie, chapter, chapterID }: any) {
             </div>
 
             <ChooseEditor
+                user={user}
                 serie={serie}
                 editorState={editorState}
                 setEditorState={setEditorState}
@@ -151,6 +151,7 @@ export default function ChapterEdit({ serie, chapter, chapterID }: any) {
 }
 
 interface ChooseEditorProps {
+    user: User,
     serie: Serie,
     editorState: string,
     setEditorState: any,
@@ -160,7 +161,7 @@ interface ChooseEditorProps {
     chapter: Chapter,
 }
 
-function ChooseEditor (props: ChooseEditorProps) {
+function ChooseEditor(props: ChooseEditorProps) {
     if (props.serie.type == 'MANGA') {
         return <MangaEditor {...props} />
     } else if (props.serie.type == 'NOVEL') {

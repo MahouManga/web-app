@@ -79,7 +79,7 @@ export default function SeriePage({ serie, chapters }: any) {
                                             <td>{moment(chapter.updatedAt).format('MMMM Do YYYY')}</td>
                                             <td>{chapter.creator?.name || '---'}</td>
                                             <td>
-                                                <Link href={`/admin/series/${serieData.id}/chapter/${chapter.id}`}>
+                                                <Link href={`/admin/series/${serieData.id}/${chapter.id}`}>
                                                     <button className="btn btn-ghost btn-xs">
                                                         <IoDocumentTextOutline size={20} />
                                                     </button>

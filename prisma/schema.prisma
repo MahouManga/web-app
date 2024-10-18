@@ -112,7 +112,7 @@ model Chapter {
 
 model ChapterContent {
   id        String  @id @default(uuid())
-  type      Boolean
+  type      ChapterContentType
   text      String?
   pages     Page[]
   chapterID String  @unique
