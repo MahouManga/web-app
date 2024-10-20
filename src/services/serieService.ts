@@ -40,6 +40,7 @@ export interface SerieCreateInput {
     coverImage: string;
     type: string;
     subtype: string;
+    releasedAt: string;
     authors?: { name: string }[]; // Nomes dos autores
     genres?: number[]; // Assuming these are genre IDs
     titles: { title: string; type: string }[]; // Títulos da Serie
@@ -219,7 +220,10 @@ export const getSeries = async (
 
 export const createSerie = async (data: SerieCreateInput): Promise<SerieData> => {
     try {
-        const authorsData = data.authors?.map((author: { name: string }) => ({ name: author.name })) || [];
+        const authorsData = data.authors?.map((author: { name: string }) => ({
+            where: { name: author.name },
+            create: { name: author.name },
+        })) || [];
         const titlesData = data.titles?.map((title: { title: string; type: string }) => ({ title: title.title, type: title.type })) || [];
         const genresData = data.genres?.map((genreId: number) => ({ id: genreId })) || [];
 
@@ -235,8 +239,9 @@ export const createSerie = async (data: SerieCreateInput): Promise<SerieData> =>
                 subtype: data.subtype.toUpperCase() as SerieSubtype,
                 posterImage: data.posterImage ?? '',
                 coverImage: data.coverImage ?? '',
+                releasedAt: Number(data.releasedAt),
                 authors: {
-                    create: authorsData,
+                    connectOrCreate: authorsData,
                 },
                 genres: {
                     connect: genresData,
@@ -251,6 +256,76 @@ export const createSerie = async (data: SerieCreateInput): Promise<SerieData> =>
         return {
             error: {
                 message: "Error creating novel",
+                status: 500,
+                error: error,
+            }
+        };
+    }
+}
+
+export const updateSerie = async (id: number, data: SerieCreateInput): Promise<SerieData> => {
+    try {
+        // Buscar os IDs dos gêneros atuais diretamente do Prisma
+        const existingSerie = await prisma.serie.findUnique({
+            where: { id },
+            select: {
+                genres: {
+                    select: { id: true },
+                },
+            },
+        });
+
+        // Verificar se a série existe
+        if (!existingSerie) {
+            throw new Error('Série não encontrada.');
+        }
+        // Obter os IDs dos gêneros atualmente associados
+        const existingGenreIds = existingSerie.genres.map((genre) => genre.id);
+        
+        const authorsData = data.authors?.map((author: { name: string }) => ({
+            where: { name: author.name },
+            create: { name: author.name },
+        })) || [];
+        const titlesData = data.titles?.map((title: { title: string; type: string }) => ({ title: title.title, type: title.type })) || [];
+        const genresData = data.genres?.map((genreId: number) => ({ id: genreId })) || [];
+
+        // Determina quais gêneros devem ser desconectados
+        const genresToDisconnect = existingGenreIds
+            .filter((id) => !(data.genres ?? []).includes(id))
+            .map((id) => ({ id }));
+
+        const serie = await prisma.serie.update({
+            where: { id },
+            data: {
+                title: data.title,
+                slug: genSlug(data.title),
+                synopsis: data.synopsis,
+                description: data.description,
+                adult: data.adult ?? false,
+                status: Number(data.status),
+                type: data.type.toUpperCase() as SerieType,
+                subtype: data.subtype.toUpperCase() as SerieSubtype,
+                posterImage: data.posterImage ?? '',
+                coverImage: data.coverImage ?? '',
+                releasedAt: Number(data.releasedAt),
+                authors: {
+                    connectOrCreate: authorsData,
+                },
+                genres: {
+                    disconnect: genresToDisconnect, // Desconectar gêneros que não estão mais associados
+                    connect: genresData, // Conectar novos gêneros
+                },
+                titles: {
+                    deleteMany: {}, // Remove todos os títulos associados a esta série
+                    create: titlesData, // Adiciona os novos títulos
+                },
+            },
+        });
+        return { data: serie };
+    } catch (error) {
+        return {
+            error: {
+                message: "Error updating novel",
                 status: 500,
                 error: error,
             }

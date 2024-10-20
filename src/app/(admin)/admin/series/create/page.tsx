@@ -1,8 +1,10 @@
+import { getGenres2 } from "@/services/genreService";
 import Form from "../CreateAndEditPage"
 
-export default function Admin() {
+export default async function Admin() {
+    const genres = await getGenres2();
 
     return (
-        <Form/>
+        <Form genres={genres}/>
     );
 }

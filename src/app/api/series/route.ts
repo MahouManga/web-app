@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSerie, getSerieByTitle, getSeries } from '@/services/serieService';
+import { createSerie, getSerieByTitle, getSeries, updateSerie } from '@/services/serieService';
 
 export async function GET(request: NextRequest) {
   try {
@@ -40,9 +40,21 @@ export async function POST(request: NextRequest) {
   try {
     const serieData = await request.json();
     const serie = await createSerie(serieData);
-    console.log(serie);
+
     return NextResponse.json(serie, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Erro ao criar série.' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const serieData = await request.json();
+    const { id, ...restoSerie } = serieData;
+    const serie = await updateSerie(id, restoSerie);
+
+    return NextResponse.json(serie, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Erro ao atualizar a série.' }, { status: 500 });
   }
 }

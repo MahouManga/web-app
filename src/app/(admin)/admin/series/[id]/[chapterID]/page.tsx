@@ -24,8 +24,6 @@ export default async function Page({ params }: { params: Params }) {
         )
     }
 
-    console.log(serie)
-
     return (
         <ChapterEdit user={user} serie={serie.data} chapter={chapter} chapterID={chapterID} />
     )
