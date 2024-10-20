@@ -1,14 +1,63 @@
-'use client'; // Componente de cliente
-
-import React, { useState } from 'react';
+'use client'; 
+import React, { useState, useEffect } from 'react';
 import { IoNotifications, IoMegaphone, IoPeople, IoBulb, IoWarning } from 'react-icons/io5';
 
 const ForumPage = () => {
-  const [showForm, setShowForm] = useState(false); // Estado para controlar se o formulário está visível
+  const [showForm, setShowForm] = useState(false); 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [posts, setPosts] = useState([]); // Novo estado para armazenar os posts
+
+  // Função para buscar os posts existentes
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch('/api/postsforum', {
+        method: 'GET',
+      });
+      if (!res.ok) {
+        throw new Error('Erro ao buscar posts');
+      }
+      const data = await res.json();
+      setPosts(data); // Armazena os posts buscados
+    } catch (error) {
+      setError((error as Error).message);
+    }
+  };
+
+  // Chama a função para buscar os posts quando o componente é montado
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  // Função para lidar com a submissão do formulário
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/postsforum', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content }), // Removido o authorId
+      });
+
+      if (!res.ok) throw new Error('Erro ao criar post');
+
+      setTitle('');
+      setContent('');
+      setShowForm(false); 
+
+      // Atualiza os posts após criar um novo
+      fetchPosts();
+    } catch (error) {
+      setError((error as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const forumSections = [
     { title: "Atualizações", description: "Feedback de todas as atualizações feitas recentemente.", icon: <IoNotifications /> },
@@ -18,34 +67,8 @@ const ForumPage = () => {
     { title: "Reporte", description: "Relatos sobre o site em geral, Relatos sobre usuário, Relatos sobre a staff.", icon: <IoWarning /> }
   ];
 
-  // Função para lidar com a submissão do formulário
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const res = await fetch('/api/postsforum/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, content, authorId: 'user-id' }), // Ajuste o authorId conforme necessário
-      });
-
-      if (!res.ok) throw new Error('Erro ao criar post');
-
-      setTitle('');
-      setContent('');
-      setShowForm(false); // Oculta o formulário após a publicação
-    } catch (error) {
-      setError((error as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div>
-      {/* Título e botão de "Criar Post" */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Fóruns</h1>
         <button onClick={() => setShowForm(!showForm)} className="btn btn-primary">
@@ -53,7 +76,6 @@ const ForumPage = () => {
         </button>
       </div>
 
-      {/* Exibe o formulário se o botão de "Criar Post" for clicado */}
       {showForm && (
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>
@@ -79,7 +101,6 @@ const ForumPage = () => {
             />
           </div>
 
-          {/* Exibe mensagens de erro se houver algum problema */}
           {error && <p className="text-red-500">{error}</p>}
 
           <button type="submit" className="btn btn-primary" disabled={loading}>
@@ -104,26 +125,20 @@ const ForumPage = () => {
           </div>
         </div>
 
-        {/* Seção de Tópicos e Posts */}
+        {/* Seção de Posts */}
         <div>
-          <h2 className="text-2xl font-semibold mb-4">Tópicos</h2>
-          <div className="bg-base-300 p-4 rounded-lg shadow space-y-4">
-            <div className="bg-secondary-content p-4 rounded-lg shadow">
-              <h3 className="text-lg font-semibold text-secondary">Dúvidas</h3>
-              <p className="text-sm">Por Henrique, Agosto 24</p>
-            </div>
-          </div>
           <h2 className="text-2xl font-semibold mt-8 mb-4">Posts</h2>
           <div className="bg-base-300 p-4 rounded-lg shadow space-y-4">
-            <div className="bg-secondary-content p-4 rounded-lg shadow">
-              <h3 className="text-lg font-semibold text-secondary">Como faz pra publicar mangás?</h3>
-              <p className="text-sm">Por Henrique, Agosto 24</p>
-            </div>
+            {posts.map((post) => (
+              <div key={post.id} className="bg-secondary-content p-4 rounded-lg shadow">
+                <h3 className="text-lg font-semibold text-secondary">{post.title}</h3>
+                <p className="text-sm">{post.content}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Seção de Estatísticas de Usuários - Fixada no Rodapé */}
       <div className="bg-base-300 p-4 rounded-lg shadow mt-6 absolute bottom-0 w-full">
         <h2 className="text-2xl font-semibold mb-4">Estatísticas de Usuários</h2>
         <div className="flex justify-between">

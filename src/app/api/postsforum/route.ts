@@ -1,27 +1,42 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/lib/db'; 
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/db'; // Certifique-se de usar o caminho correto para o Prisma Client
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).end(`Método ${req.method} não permitido`);
-  }
-
-  const { title, content } = req.body;
-
-  // Valida se o título e conteúdo foram enviados
-  if (!title || !content) {
-    return res.status(400).json({ message: 'Título e conteúdo são obrigatórios' });
-  }
-
+// Lida com GET para buscar os posts
+export async function GET() {
   try {
-    // Cria o post no banco de dados
+    const posts = await prisma.post.findMany({
+      orderBy: {
+        createdAt: 'desc', // Ordena por data de criação, do mais recente para o mais antigo
+      },
+    });
+    return NextResponse.json(posts, { status: 200 });
+  } catch (error) {
+    console.error('Erro ao buscar posts:', error);
+    return NextResponse.json({ error: 'Erro ao buscar posts.' }, { status: 500 });
+  }
+}
+
+// Lida com POST para criar um novo post
+export async function POST(request: Request) {
+  try {
+    const { title, content } = await request.json();
+
+    // Validação simples de campos
+    if (!title || !content) {
+      return NextResponse.json({ error: 'Título e conteúdo são obrigatórios.' }, { status: 400 });
+    }
+
+    // Criação do post no banco de dados usando Prisma
     const post = await prisma.post.create({
-      data: { title, content },
+      data: {
+        title,
+        content,
+      },
     });
 
-    return res.status(201).json(post); // Retorna o post criado
+    return NextResponse.json(post, { status: 201 });
   } catch (error) {
-    return res.status(500).json({ message: 'Erro ao criar o post', error });
+    console.error('Erro ao criar post:', error);
+    return NextResponse.json({ error: 'Erro ao criar post.' }, { status: 500 });
   }
 }
