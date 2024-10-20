@@ -64,6 +64,7 @@ export default function MangaLoader({ chapter, previousChapter, nextChapter }: a
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+
     return (
         <>
             <div className='flex flex-col items-center justify-center w-full h-full'>

@@ -1,16 +1,26 @@
-// LeftSide.jsx
+'use client';
 
 import { SeriePlus } from '@/services/serieService';
 import { getStatusText } from '@/utils/projectStatus';
 import Image from 'next/image';
+import { useState } from 'react';
 import { IoBook, IoBookmarkOutline, IoHeartOutline, IoStar, IoEye, IoBookmark } from 'react-icons/io5';
 
 export default function LeftSide({ serie }: { serie: SeriePlus }) {
+  const [imgSrc, setImgSrc] = useState(`/images/series/${serie.id}/posterImage`);
+
+  console.log(serie)
+
+  const handleError = () => {
+    setImgSrc('/noImage.jpg');
+  };
+
   return (
     <div className='col-span-12 lg:col-span-3 relative flex justify-center w-full lg:min-h-[750px] text-base-content'>
       <div className='z-10 lg:absolute flex flex-col items-center justify-center gap-y-2 w-full lg:-translate-y-[130px]'>
         <div className="p-1 bg-background rounded overflow-hidden">
-          <Image loading="lazy" width={640} height={960} alt="Poster Image" src="/noImage.jpg" className="w-full bg-muted/40 h-[500px] sm:h-[720px] md:h-[530px] lg:w-full lg:h-[320px] xl:h-[430px] 2xl:h-[450px] rounded" />
+          <Image loading="lazy" width={640} height={960} alt="Poster Image" onError={handleError}
+          src={imgSrc} className="w-full bg-muted/40 h-[500px] sm:h-[720px] md:h-[530px] lg:w-full lg:h-[320px] xl:h-[430px] 2xl:h-[450px] rounded" />
         </div>
         <div className='flex gap-5'>
           <li className='w-full h-14 flex items-center justify-center gap-2 rounded'>

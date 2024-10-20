@@ -332,3 +332,30 @@ export const updateSerie = async (id: number, data: SerieCreateInput): Promise<S
         };
     }
 }
+
+export const getSeriesRecently = async (): Promise<SerieDataList> => {
+    try {
+        const series = await prisma.serie.findMany({
+            include: {
+                chapters: {
+                    orderBy: {
+                        createdAt: 'desc',
+                    },
+                    take: 2,
+                },
+            },
+        });
+
+        console.log(series)
+
+        return { data: series };
+    } catch (error) {
+        return {
+            error: {
+                message: "Error getting novels",
+                status: 500,
+                error: error,
+            }
+        };
+    }
+}

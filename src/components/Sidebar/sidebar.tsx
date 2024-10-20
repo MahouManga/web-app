@@ -25,15 +25,17 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                         border-2 rounded-full  ${!open && "rotate-180"}`}
                         onClick={() => setOpen(!open)}
                     />
-                    <div className="flex gap-x-4 items-center">
-                        <img
-                            src="/favicon.ico"
-                            className={`w-9 h-9 cursor-pointer duration-500 ${open && "rotate-[360deg]"
-                                }`}
-                        />
-                        <h1 className={`origin-left font-medium text-xl duration-200 ${!open && "scale-0"}`}>
-                            Mahou Admin
-                        </h1>
+                    <div>
+                        <Link className="flex gap-x-4 items-center" href="/">
+                            <img
+                                src="/favicon.ico"
+                                className={`w-9 h-9 cursor-pointer duration-500 ${open && "rotate-[360deg]"
+                                    }`}
+                            />
+                            <h1 className={`origin-left font-medium text-xl duration-200 ${!open && "scale-0"}`}>
+                                Mahou Admin
+                            </h1>
+                        </Link>
                     </div>
                     <ul className="pt-6">
                         {Menus.map((Menu, index) => (
@@ -57,7 +59,7 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                 <SidebarHeader user={user} />
                 <main>
                     <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-                        <Toaster/>
+                        <Toaster />
                         {children}
                     </div>
                 </main>
