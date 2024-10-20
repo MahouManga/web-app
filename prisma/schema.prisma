@@ -162,4 +162,13 @@ model Title {
   serie   Serie  @relation(fields: [serieID], references: [id])
 }
 
+model Post {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
 // F O R U M //
