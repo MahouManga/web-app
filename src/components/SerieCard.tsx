@@ -1,4 +1,3 @@
-// components/NovelCard.tsx
 'use client';
 
 import Image from 'next/image';
@@ -7,8 +6,10 @@ import Link from 'next/link';
 import NewBadge from '@/components/NewBadge';
 import { useState } from 'react';
 
-export default function NovelCard({ serie, link }: { serie: any, link?: string }) {
+export default function SerieCard({ serie, link }: { serie: any, link?: string }) {
   const [imgSrc, setImgSrc] = useState(`/images/series/${serie.id}/posterImage`);
+
+  console.log(serie)
 
   const handleError = () => {
     setImgSrc('/noImage.jpg');

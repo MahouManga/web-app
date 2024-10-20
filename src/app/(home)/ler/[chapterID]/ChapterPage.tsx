@@ -20,13 +20,13 @@ export default function ChapterPage({ serie, chapter, previousChapter, nextChapt
                     <ChapterHeader serie={serie} chapter={chapter} previousChapter={previousChapter} nextChapter={nextChapter} />
                     <ChaptersDrawer serie={serie} chapter={chapter} />
                 </div>
-                <div className='lg:hidden flex justify-center w-full space-x-5'>
+                <div className='lg:hidden flex justify-center w-full space-x-5 mb-4'>
                     <div className='max-h-12'>
-                        <Image src={serie.posterImage} alt={serie.title} className='rounded h-full w-[40px]' width={100} height={300} />
+                        <Image src={`/images/series/${serie.id}/posterImage`} alt={serie.title} className='rounded h-full w-[40px]' width={100} height={300} />
                     </div>
                     <div className="flex flex-col lg:min-w-[240px]">
-                        <h1 className="font-semibold text-foreground text-xl">{chapter.volume == 0 ? '' : `Volume ${chapter.volume} - `}Capítulo {chapter.index}</h1>
-                        <h2 className="text-muted-foreground text-sm">{serie.title}</h2>
+                        <h1 className="font-semibold text-xl">{chapter.volume == 0 ? '' : `Volume ${chapter.volume} - `}Capítulo {chapter.index}</h1>
+                        <h2 className="text-sm">{serie.title}</h2>
                     </div>
                 </div>
                 <ContentLoader serie={serie} chapter={chapter} previousChapter={previousChapter} nextChapter={nextChapter} />

@@ -9,20 +9,9 @@ import { HiOutlineSwitchVertical } from 'react-icons/hi';
 import { SeriePlus } from '@/services/serieService';
 import { getStatusText } from '@/utils/projectStatus';
 
-export default function RightSide({ serie }: { serie: SeriePlus }) {
+export default function RightSide({ serie, chapters }: { serie: SeriePlus, chapters: any }) {
   const [tab, setTab] = useState('About');
   const [isDescending, setIsDescending] = useState(false);
-
-  // Sample data for chapters
-  const chapters = [
-    { id: 1, volume: 1, index: 1, name: 'O Fim de tudo?', date: '2023-01-01' },
-    { id: 2, volume: 1, index: 2, name: 'Renascendo em uma nova familia', date: '2023-01-02' },
-    { id: 3, volume: 1, index: 3, name: 'O Começo da Vingança', date: '2023-01-03' },
-    { id: 4, volume: 1, index: 4, name: 'Talento e Poder', date: '2023-01-04' },
-    { id: 5, volume: 1, index: 5, name: '', date: '2023-01-05' },
-    { id: 5, volume: 1, index: 6, name: '', date: '2023-01-05' },
-    { id: 5, volume: 1, index: 7, name: '', date: '2023-01-05' },
-  ];
 
   // Sorting chapters
   const sortedChapters = [...chapters].sort((a, b) => {
@@ -112,10 +101,10 @@ export default function RightSide({ serie }: { serie: SeriePlus }) {
                     <IoBook size={18} />
                   </div>
                   <div className="flex-grow w-[10%] xl:w-[60%]">
-                    <Link href="#" className="flex justify-between items-center">
+                    <Link href={`/ler/${chapter.id}`} className="flex justify-between items-center">
                       <div className='truncate flex space-x-3'>
                         <p className="font-semibold">Cap. {chapter.index}</p>
-                        {chapter.name.length > 0 ? <span className='opacity-65 text-neutral-content'>{chapter.name}</span> : ''}
+                        {chapter.title.length > 0 ? <span className='opacity-65 text-neutral-content'>{chapter.title}</span> : ''}
                       </div>
                     </Link>
                   </div>

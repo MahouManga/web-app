@@ -36,16 +36,24 @@ export default async function NavBar() {
                         <ul
                             tabIndex={0}
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                            <li>
-                                <a>Obras</a>
-                                <ul className="p-2">
-                                    <li><a>Mangas</a></li>
-                                    <li><a>Novels</a></li>
-                                </ul>
-                            </li>
-                            <li><a>Recentes</a></li>
-                            <li><a>Fórum</a></li>
-                            <li><a>Admininstração</a></li>
+                            {
+                                menu.map((item, index) => (
+                                    item.children ?
+                                        <li key={index}>
+                                            <a>{item.title}</a>
+                                            {item.children && <ul className="p-2">
+                                                {
+                                                    item.children.map((child, index) => (
+                                                        <li key={index}><a>{child.title}</a></li>
+                                                    ))
+                                                }
+                                            </ul>}
+                                        </li>
+                                        : <li key={index}>
+                                            <a key={index} href={item.link}>{item.title}</a>
+                                        </li>
+                                ))
+                            }
                         </ul>
                     </div>
                     <a className="btn btn-ghost text-xl" href='/'>MahouManga</a>

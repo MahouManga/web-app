@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import React, { useState, useEffect, useRef } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
@@ -69,7 +70,7 @@ export default function Carousel({
         {slides.map((serie, index) => (
           <div className="flex-shrink-0 w-full sm:h-[400px] relative" key={index}>
             <Image
-              src={serie.coverImage ? serie.coverImage : (serie.posterImage || './noImage.jpg')}
+              src={`/images/series/${serie.id}/posterImage`}
               width={640}
               height={960}
               alt={serie.title + ' CoverImage'}
@@ -81,7 +82,7 @@ export default function Carousel({
               <div className="max-w-screen-xl flex flex-col sm:flex-row items-center sm:items-start bg-opacity-70 p-5 rounded-md">
                 <div className="flex-shrink-0 mr-4">
                   <Image
-                    src={serie.posterImage || './noImage.jpg'}
+                    src={`/images/series/${serie.id}/posterImage`}
                     width={300}
                     height={300}
                     alt={serie.title}

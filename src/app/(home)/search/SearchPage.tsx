@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import NovelCard from '@/components/NovelCard';
+import SerieCard from '@/components/SerieCard';
 import SearchInput from '@/components/SearchInput';
 import { Genre } from '@prisma/client';
 
@@ -57,8 +57,8 @@ export default function SearchPage({ genres }: { genres: Genre[] }) {
                             <p>Carregando...</p>
                         ) : (
                             <div className="grid grid-cols-2 text-center text-white md:grid-cols-4 gap-x-4 lg:gap-x-3 lg:grid-cols-6 gap-y-4">
-                                {data.map((novel: any) => (
-                                    <NovelCard key={novel.id} novel={novel} />
+                                {data.map((serie: any) => (
+                                    <SerieCard key={serie.id} serie={serie} />
                                 ))}
                             </div>
                         )}
