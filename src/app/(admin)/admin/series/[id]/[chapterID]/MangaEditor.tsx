@@ -30,7 +30,6 @@ export default function MangaEditor({ props }: any) {
             {viewMode === 1 && (
                 <div className="mb-5">
                     <h3 className="text-lg font-bold mb-3">Upload de ZIP com Imagens (Máximo 50mb)</h3>
-                    <Dropzone onDrop={onDrop} />
                     {selectedFile && (
                         <div className="mt-3">
                             <p>Arquivo selecionado: {selectedFile.name}</p>
