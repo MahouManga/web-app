@@ -16,13 +16,15 @@ export default async function Page({ params }: { params: Params }) {
     const serie = await getSerie(Number(id));
     const chapter = await getChapterID(chapterID);
 
-    if (!user ||!serie || (!chapter && chapterID !== 'new')) {
+    if (!user || !serie || serie.error || (!chapter && chapterID !== 'new')) {
         return (
             <div>
-                Chapter not found
+                Serie or Chapter not found
             </div>
         )
     }
+
+    console.log(serie)
 
     return (
         <ChapterEdit user={user} serie={serie.data} chapter={chapter} chapterID={chapterID} />

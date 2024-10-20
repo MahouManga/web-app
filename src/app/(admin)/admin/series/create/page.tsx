@@ -1,6 +1,6 @@
-import Form from "./form"
+import Form from "../CreateAndEditPage"
 
-export default function Admin({user}: any) {
+export default function Admin() {
 
     return (
         <Form/>

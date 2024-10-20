@@ -57,8 +57,8 @@ export default function SearchPage({ genres }: { genres: Genre[] }) {
                             <p>Carregando...</p>
                         ) : (
                             <div className="grid grid-cols-2 text-center text-white md:grid-cols-3 lg:grid-cols-4 gap-x-4 lg:gap-x-3 xl:grid-cols-5 gap-y-4">
-                                {data.map((novel: any) => (
-                                    <NovelCard key={novel.id} novel={novel} link={`/admin/series/${novel.id}`} />
+                                {data.map((serie: any) => (
+                                    <NovelCard key={serie.id} serie={serie} link={`/admin/series/${serie.id}`} />
                                 ))}
                             </div>
                         )}

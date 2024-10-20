@@ -71,6 +71,7 @@ model Serie {
   type        SerieType // Novel | Manga -> image or text
   subtype     SerieSubtype // Subtype
   views       Int          @default(0)
+  releasedAt  Int
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @default(now())
   titles      Title[]

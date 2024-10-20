@@ -17,23 +17,32 @@ const subTypes = Object.keys(SerieSubtype).map((key) => ({
     label: key.charAt(0) + key.slice(1).toLowerCase(), // Formata o label, ex: "NOVEL" -> "Novel"
 }));
 
-export default function Form() {
+export default function Form({ serie }: { serie?: any }) {
     const router = useRouter()
     const [formData, setFormData] = useState({
-        title: '',
-        slug: '',
-        synopsis: '',
-        description: '',
-        readingTips: '',
-        status: '',
-        adult: false,
-        type: '',
-        subtype: '',
-        genres: [] as any,
-        titles: [] as any,
-        authors: [] as any,
-        releasedAt: '',
+        title: serie ? serie.title : '',
+        slug: serie ? serie.slug : '',
+        synopsis: serie ? serie.synopsis : '',
+        description: serie ? serie.description : '',
+        readingTips: serie ? serie.readingTips : '',
+        status: serie ? serie.status : 'DRAFT',
+        adult: serie ? serie.adult : false,
+        type: serie ? serie.type : '',
+        subtype: serie ? serie.subtype : '',
+        genres: serie ? serie.genres : [] as any,
+        titles: serie ? serie.titles : [] as any,
+        authors: serie ? serie.authors : [] as any,
+        releasedAt: serie ? serie.releasedAt : '',
+        poster: null as File | null,
+        cover: null as File | null,
     })
+
+    const [previewImages, setPreviewImages] = useState({
+        poster: '',
+        cover: '',
+    });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
@@ -43,6 +52,22 @@ export default function Form() {
                 ...formData,
                 [name]: checked,
             });
+        } else if (type === 'file' && e.target instanceof HTMLInputElement) {
+            const file = e.target.files ? e.target.files[0] : null;
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setPreviewImages(prevState => ({
+                        ...prevState,
+                        [name]: reader.result as string,
+                    }));
+                };
+                reader.readAsDataURL(file);
+            }
+            setFormData(prevState => ({
+                ...prevState,
+                [name]: file,
+            }));
         } else {
             setFormData({
                 ...formData,
@@ -100,6 +125,94 @@ export default function Form() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        setIsSubmitting(true);
+        try {
+            // 1. Preparar os dados comuns (sem imagens)
+            const dataToSend = {
+                title: formData.title,
+                slug: formData.slug,
+                synopsis: formData.synopsis,
+                description: formData.description,
+                readingTips: formData.readingTips,
+                status: formData.status,
+                adult: formData.adult,
+                type: formData.type,
+                subtype: formData.subtype,
+                releasedAt: formData.releasedAt,
+                genres: formData.genres,
+                titles: formData.titles,
+                authors: formData.authors,
+            };
+
+            // 2. Enviar os dados comuns para a API de criação da obra
+            const response = await fetch('/api/series', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSend),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                toast.error('Erro na criação da obra, verifique se todos os campos estão preenchidos corretamente.');
+                setIsSubmitting(false);
+                return;
+            }
+
+            toast.success('Obra criada com sucesso!');
+            const workId = data.data.id;
+
+            // 3. Função para enviar uma imagem para a API de upload
+            const uploadImage = async (file: File, type: 'posterImage' | 'coverImage') => {
+                const imageFormData = new FormData();
+                imageFormData.append('imagem', file);
+                imageFormData.append('name', type); // Inclui o nome do arquivo com formato
+                imageFormData.append('id', workId);
+                imageFormData.append('type', 'series');
+
+                const uploadResponse = await fetch('/images/upload', {
+                    method: 'POST',
+                    body: imageFormData,
+                    headers: {
+                        Authorization: 'TEMPORARIO',
+                    },
+                });
+
+                const uploadData = await uploadResponse.json();
+
+                if (!uploadResponse.ok) {
+                    throw new Error(uploadData.error || `Erro ao enviar a imagem ${type}.`);
+                }
+
+                return uploadData;
+            };
+
+            // 4. Enviar o poster, se existir
+            if (formData.poster) {
+                await uploadImage(formData.poster, 'posterImage');
+                toast.success('Poster enviado com sucesso!');
+            }
+
+            // 5. Enviar o cover, se existir
+            if (formData.cover) {
+                await uploadImage(formData.cover, 'coverImage');
+                toast.success('Cover enviado com sucesso!');
+            }
+
+            // 6. Redirecionar para a página da série criada
+            router.push(`/admin/series/${workId}`);
+        } catch (error: any) {
+            console.error('Error submitting novel:', error);
+            toast.error(`Ocorreu um erro: ${error.message || 'Por favor, tente novamente.'}`);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleSubmit2 = async (e: FormEvent) => {
+        e.preventDefault();
         try {
             const response = await fetch('/api/series', {
                 method: 'POST',
@@ -130,6 +243,39 @@ export default function Form() {
                 <h2 className="card-title">Adicionar nova Obra</h2>
                 <form>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Poster e Cover */}
+                        <div className="form-control mb-4 items-center">
+
+                            <label className="label" htmlFor="poster">
+                                <span className="label-text">Poster</span>
+                            </label>
+                            <input
+                                type="file"
+                                id="poster"
+                                name="poster"
+                                className="file-input file-input-bordered w-full"
+                                onChange={handleChange}
+                            />
+                            {previewImages.poster && (
+                                <img src={previewImages.poster} alt="Poster Preview" className="mt-2 h-70 object-contain" />
+                            )}
+                        </div>
+                        <div className="form-control mb-4">
+                            <label className="label" htmlFor="cover">
+                                <span className="label-text">Cover</span>
+                            </label>
+                            <input
+                                type="file"
+                                id="cover"
+                                name="cover"
+                                className="file-input file-input-bordered w-full"
+                                onChange={handleChange}
+                            />
+                            {previewImages.cover && (
+                                <img src={previewImages.cover} alt="Cover Preview" className="mt-2 h-70 object-contain" />
+                            )}
+                        </div>
+
                         <div className="form-control mb-4">
                             <label className="label" htmlFor="title">
                                 <span className="">Titulo</span>
@@ -337,13 +483,9 @@ export default function Form() {
 
                     {/* Botão de Submit */}
                     <div className="form-control mt-6 flex items-center space-y-4">
-                    <button type="submit" onClick={handleSubmit} className="btn btn-primary w-full md:w-1/4">Add Novel</button>
-                    <button type="submit" onClick={handleSubmit} className="btn btn-secondary w-full md:w-1/4">Add Novel</button>
-                    <button type="submit" onClick={handleSubmit} className="btn btn-info w-full md:w-1/4">Add Novel</button>
-                    <button type="submit" onClick={handleSubmit} className="btn btn-accent w-full md:w-1/4">Add Novel</button>
-                    <button type="submit" onClick={handleSubmit} className="btn btn-warning w-full md:w-1/4">Add Novel</button>
-                    <button type="submit" onClick={handleSubmit} className="btn btn-success w-full md:w-1/4">Add Novel</button>
-                    <button type="submit" onClick={handleSubmit} className="btn btn-error w-full md:w-1/4">Add Novel</button>
+                        <button type="submit" onClick={handleSubmit}
+                            disabled={isSubmitting}
+                            className="btn btn-primary w-full md:w-2/4">{isSubmitting ? 'Enviando...' : 'Adicionar Obra'}</button>
                     </div>
                 </form>
             </div>

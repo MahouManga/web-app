@@ -18,13 +18,25 @@ export default function SeriePage({ serie, chapters }: any) {
         return acc;
     }, {});
 
+    const [imgSrc, setImgSrc] = useState(`/images/series/${serie.id}/posterImage`);
+
+    const handleError = () => {
+        setImgSrc('/noImage.jpg');
+    };
+
     return (
         <div>
             <Breadcrumb pageName="Series" />
             <div className="mx-auto bg-base-200 text-base-content rounded-lg shadow-lg p-4">
                 <div className="card lg:card-side bg-base-100 shadow-xl mb-8">
                     <figure>
-                        <Image src={serieData.posterImage || '/noImage.jpg'} alt="Album Cover" width={200} height={300} />
+                        <Image src={imgSrc}
+                            onError={handleError}
+                            alt={serie.title + ' Poster'}
+                            width={200}
+                            placeholder="empty"
+                            priority
+                            height={300} />
                     </figure>
                     <div className="card-body">
                         <h2 className="card-title">{serieData.title}</h2>
