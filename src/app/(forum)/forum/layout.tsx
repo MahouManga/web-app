@@ -1,6 +1,6 @@
-import NavBar from "@/components/Navbar/Index";
+import React from 'react'; // Importa React para evitar erros
+import NavBar from "@/components/Navbar/Index"; // Certifique-se de que o caminho para o NavBar está correto
 import type { Metadata } from "next";
-
 
 export const metadata: Metadata = {
   title: "Mahou Reader",
@@ -14,9 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className='bg-base-100 text-base-content'>
-        <NavBar />
-        {children}
+      <body className="bg-base-100 text-base-content">
+        <NavBar /> {/* Exibe a barra de navegação */}
+        <div className="container mx-auto p-4">
+          {children} {/* Renderiza o conteúdo da página */}
+        </div>
       </body>
     </html>
   );
