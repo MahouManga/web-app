@@ -50,7 +50,7 @@ export default function ChapterEdit({ user, serie, chapter, chapterID, }: any) {
 
             <div className="flex flex-col md:flex-row md:space-x-4 mb-5 relative">
                 <div className="flex-shrink-0">
-                    <div className="card w-32 bg-base-300 shadow-md">
+                    <div className="card w-32 bg-base-300">
                         <figure>
                             <Image
                                 src={serie.posterImage ? serie.posterImage : '/noImage.jpg'}

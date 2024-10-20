@@ -63,7 +63,7 @@ model Serie {
   title       String
   slug        String
   synopsis    String
-  description String
+  description String?
   status      Int
   adult       Boolean      @default(false)
   posterImage String?

@@ -17,7 +17,7 @@ const subTypes = Object.keys(SerieSubtype).map((key) => ({
     label: key.charAt(0) + key.slice(1).toLowerCase(), // Formata o label, ex: "NOVEL" -> "Novel"
 }));
 
-export default function Form({ serie }: { serie?: any }) {
+export default function Form({ serie, genres }: { serie?: any, genres: any }) {
     const router = useRouter()
     const [formData, setFormData] = useState({
         title: serie ? serie.title : '',
@@ -29,7 +29,7 @@ export default function Form({ serie }: { serie?: any }) {
         adult: serie ? serie.adult : false,
         type: serie ? serie.type : '',
         subtype: serie ? serie.subtype : '',
-        genres: serie ? serie.genres : [] as any,
+        genres: serie ? serie.genres.map((genre: any) => genre.id) : [] as any,
         titles: serie ? serie.titles : [] as any,
         authors: serie ? serie.authors : [] as any,
         releasedAt: serie ? serie.releasedAt : '',
@@ -38,8 +38,8 @@ export default function Form({ serie }: { serie?: any }) {
     })
 
     const [previewImages, setPreviewImages] = useState({
-        poster: '',
-        cover: '',
+        poster: serie ? `/images/series/${serie.id}/posterImage` : '',
+        cover: serie ? `/images/series/${serie.id}/posterImage` : '',
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -121,6 +121,7 @@ export default function Form({ serie }: { serie?: any }) {
                 ? prevFormData.genres.filter((id: any) => id !== genreId)
                 : [...prevFormData.genres, genreId],
         }));
+        console.log(formData.genres);
     };
 
     const handleSubmit = async (e: FormEvent) => {
@@ -142,11 +143,12 @@ export default function Form({ serie }: { serie?: any }) {
                 genres: formData.genres,
                 titles: formData.titles,
                 authors: formData.authors,
+                ...(serie && { id: serie.id })
             };
 
             // 2. Enviar os dados comuns para a API de criação da obra
             const response = await fetch('/api/series', {
-                method: 'POST',
+                method: serie ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -161,7 +163,7 @@ export default function Form({ serie }: { serie?: any }) {
                 return;
             }
 
-            toast.success('Obra criada com sucesso!');
+            toast.success(serie ? 'Obra editada com sucesso!' : 'Obra criada com sucesso!');
             const workId = data.data.id;
 
             // 3. Função para enviar uma imagem para a API de upload
@@ -211,31 +213,6 @@ export default function Form({ serie }: { serie?: any }) {
         }
     };
 
-    const handleSubmit2 = async (e: FormEvent) => {
-        e.preventDefault();
-        try {
-            const response = await fetch('/api/series', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            const data = await response.json();
-
-
-            if (data.error) {
-                toast.error('Erro na criação da obra, \ntem alguma coisa faltando!');
-            } else {
-                toast.success('Obra criada com sucesso!');
-                router.push(`/admin/series/${data.data.id}`);
-            }
-        } catch (error) {
-            console.error('Error submitting novel:', error);
-        }
-    };
-
     return (
 
         <div className="bg-base-300 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -257,7 +234,7 @@ export default function Form({ serie }: { serie?: any }) {
                                 onChange={handleChange}
                             />
                             {previewImages.poster && (
-                                <img src={previewImages.poster} alt="Poster Preview" className="mt-2 h-70 object-contain" />
+                                <img src={previewImages.poster} alt="Poster Preview" className="mt-2 max-h-70 object-contain" />
                             )}
                         </div>
                         <div className="form-control mb-4">
@@ -272,7 +249,7 @@ export default function Form({ serie }: { serie?: any }) {
                                 onChange={handleChange}
                             />
                             {previewImages.cover && (
-                                <img src={previewImages.cover} alt="Cover Preview" className="mt-2 h-70 object-contain" />
+                                <img src={previewImages.cover} alt="Cover Preview" className="mt-2 max-h-70 object-contain" />
                             )}
                         </div>
 
@@ -375,7 +352,11 @@ export default function Form({ serie }: { serie?: any }) {
 
                     <div className="form-control mb-4">
                         <label className="label" htmlFor="description">
-                            <span className="label-text">Descrição</span>
+                            <span className="label-text">Descrição
+                                <div className="tooltip tooltip-right" data-tip="Opcional, use para explicar o que é a obra ou algo assim!">
+                                    <span className="text-info-content cursor-pointer ml-2">?</span>
+                                </div>
+                            </span>
                         </label>
                         <textarea
                             id="description"
@@ -393,7 +374,7 @@ export default function Form({ serie }: { serie?: any }) {
                             <span className="label-text">
                                 Release Date
                                 <div className="tooltip tooltip-right" data-tip="Data de lançamento da obra.">
-                                    <span className="text-info cursor-pointer ml-2">?</span>
+                                    <span className="text-info-content cursor-pointer ml-2">?</span>
                                 </div></span>
                         </label>
                         <input
@@ -409,6 +390,27 @@ export default function Form({ serie }: { serie?: any }) {
                             required
                         />
                     </div>
+
+                    {/* Gêneros */}
+                    <div className="form-control mb-4">
+                        <label className="label">
+                            <span className="label-text">Gêneros</span>
+                        </label>
+                        <div className="flex flex-wrap">
+                            {genres
+                                .slice()
+                                .sort((a: any, b: any) => a.name.localeCompare(b.name))
+                                .map((genre: any) => (
+                                    <div
+                                        key={genre.id}
+                                        onClick={() => handleGenreClick(genre.id)}
+                                        className={`btn m-1 cursor-pointer ${formData.genres.some((g: any) => g === genre.id) ? 'badge-primary' : 'badge-neutral'}`}>
+                                        {genre.name}
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
+
 
                     {/* Títulos */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -485,7 +487,7 @@ export default function Form({ serie }: { serie?: any }) {
                     <div className="form-control mt-6 flex items-center space-y-4">
                         <button type="submit" onClick={handleSubmit}
                             disabled={isSubmitting}
-                            className="btn btn-primary w-full md:w-2/4">{isSubmitting ? 'Enviando...' : 'Adicionar Obra'}</button>
+                            className="btn btn-primary w-full md:w-2/4">{isSubmitting ? 'Enviando...' : (serie ? 'Atualizar Dados' : 'Criar Serie')}</button>
                     </div>
                 </form>
             </div>
