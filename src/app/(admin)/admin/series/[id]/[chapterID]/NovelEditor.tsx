@@ -4,6 +4,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import EditorToolbar, { modules } from "@/components/editorToolBar";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const formats = [
@@ -13,9 +15,10 @@ const formats = [
     "color", "code-block"
 ];
 export default function NovelEditor({ editorState, setEditorState, chapter, chapterID, formData, serie }: any) {
+    const router = useRouter();
     const [isHtmlPriority, setIsHtmlPriority] = useState(1);
-    const [content, setContent] = useState<string>(chapter.content.text? chapter.content.text : '');
-    const [htmlContent, setHtmlContent] = useState<string>(chapter.content.text? chapter.content.text : '');
+    const [content, setContent] = useState<string>(chapter && chapter.content && chapter.content.text? chapter.content.text : '');
+    const [htmlContent, setHtmlContent] = useState<string>(chapter && chapter.content && chapter.content.text? chapter.content.text : '');
 
     const handleEditorChange = (content: string) => {
         if (isHtmlPriority == 1) {
@@ -34,7 +37,8 @@ export default function NovelEditor({ editorState, setEditorState, chapter, chap
                 body: JSON.stringify({ ...formData, type: editorState, contentText: htmlContent, id: chapterID }), // ID is irrelevant if is 'POST'
             });
             if (response.ok) {
-                console.log('LETWS GOO')
+                toast.success(`Capitulo ${formData.index} ${chapterID ? 'atualizado' : 'criado'} com sucesso!`);
+                router.push(`/admin/series/${serie.id}`);
             } else {
                 console.error('Error creating chapter:', response.statusText);
             }

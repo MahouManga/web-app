@@ -52,7 +52,7 @@ export default function SerieCard({ serie, link }: { serie: any, link?: string }
         {serie.chapters?.map((chapter: any, index: number) => (
           <Link
             key={index}
-            href={`/series/${serie.id}/ler/vol-${chapter.volume}-cap-${chapter.index}`}
+            href={`/ler/${chapter.id}`}
           >
             <div className="flex items-center justify-between text-sm mt-1 bg-base-300 rounded-md px-4 py-2 hover:bg-primary-content hover:text-primary hover:font-bold">
               <p>Capítulo {chapter.index}</p>

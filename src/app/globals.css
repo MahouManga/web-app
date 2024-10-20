@@ -86,3 +86,146 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* DISQUS CUSTOM CSS */
+
+#disqus-wrapper {
+  color: #333333; /* Texto primário */
+  border: 1px solid #ddd; /* Borda leve */
+  border-radius: 8px; /* Cantos arredondados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
+}
+
+/* Estilo para o componente CommentCount */
+#disqus-wrapper .disqus-comment-count {
+  font-size: 22px; /* Aumenta o tamanho da fonte */
+  color: #fff; /* Cor do texto */
+  font-weight: bold; /* Deixa o texto em negrito */
+  margin-bottom: 15px; /* Espaço abaixo do contador */
+  display: flex; /* Faz com que ocupe a largura total */
+  text-align: center; /* Alinha à esquerda */
+  justify-content: center;
+  padding: 20px 0px 8px 0px;
+}
+
+/* Estilo do corpo dos comentários e outras partes do Disqus */
+#disqus-wrapper #disqus_thread {
+  background-color: #fff; /* Fundo dos comentários */
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #eee; /* Borda ao redor dos comentários */
+}
+
+/* Estilo para o nome do autor */
+#disqus-wrapper .author a {
+  color: #0073e6; /* Cor dos links (autor) */
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#disqus-wrapper .author a:hover {
+  text-decoration: underline;
+}
+
+/* Estilo para o corpo do comentário */
+#disqus-wrapper .post-body {
+  color: #000; /* Cor do texto dos comentários */
+  font-size: 14px; /* Tamanho do texto */
+  line-height: 1.6; /* Espaçamento entre linhas */
+}
+
+/* Estilo para as respostas */
+#disqus-wrapper .reply {
+  color: #0073e6; /* Cor do link de resposta */
+}
+
+#disqus-wrapper .reply:hover {
+  color: #005bb5; /* Cor ao passar o mouse no link de resposta */
+}
+
+/* Estilo para os campos de entrada */
+#disqus-wrapper textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Estilo para o botão de envio */
+#disqus-wrapper .submit-button {
+  background-color: #0073e6;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#disqus-wrapper .submit-button:hover {
+  background-color: #005bb5;
+}
+
+
+/* global.css ou um arquivo CSS separado */
+
+/* Personalizando a barra de rolagem com as cores do daisyUI */
+
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: var(--bg-base-300);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--bg-primary);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--bg-primary-focus);
+  /* Cor ao passar o mouse */
+}
+
+/* ==== READER ==== */
+
+.chapter-section h4 {
+  font-size: 2rem;
+  font-weight: 100;
+  line-height: 3rem;
+}
+
+.chapter-section h3 {
+  font-size: 1.75rem;
+  font-weight: 300;
+  line-height: 3rem;
+}
+
+.chapter-section h2 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.chapter-section img {
+  width: 850px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chapter-section p {
+  font-weight: 400;
+  line-height: 2rem;
+  margin-bottom: 1.5rem;
+  word-break: break-word;
+  /* Adicione essa linha */
+  overflow-wrap: break-word;
+  /* Adicione essa linha */
+}
+
+.chapter-section strong {
+  font-weight: 700;
+}

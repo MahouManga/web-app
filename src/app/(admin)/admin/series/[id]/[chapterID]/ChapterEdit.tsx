@@ -53,7 +53,7 @@ export default function ChapterEdit({ user, serie, chapter, chapterID, }: any) {
                     <div className="card w-32 bg-base-300">
                         <figure>
                             <Image
-                                src={serie.posterImage ? serie.posterImage : '/noImage.jpg'}
+                                src={`/images/series/${serie.id}/posterImage`}
                                 alt="serie Cover"
                                 width={200}
                                 height={200}

@@ -41,7 +41,7 @@ export default function ChapterPage({ serie, chapter, previousChapter, nextChapt
 function ContentLoader({ serie, chapter, previousChapter, nextChapter }: { serie: any, chapter: any, previousChapter: any, nextChapter: any }) {
     return (
         <section>
-            {serie.mediaType === 'NOVEL' ? (
+            {serie.type === 'NOVEL' ? (
                 <NovelLoader chapter={chapter} previousChapter={previousChapter} nextChapter={nextChapter} />
             ) : (
                 <MangaLoader chapter={chapter} previousChapter={previousChapter} nextChapter={nextChapter} />
