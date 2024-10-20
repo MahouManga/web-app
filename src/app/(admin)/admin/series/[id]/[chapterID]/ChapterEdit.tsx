@@ -67,7 +67,7 @@ export default function ChapterEdit({ user, serie, chapter, chapterID, }: any) {
                     <p>Hyungwuk Shin, Killer Whale</p>
                     <p>Ano de publicação: {serie.releasedAt}</p>
                     <p>Status: {getStatusText(serie.status)}</p>
-                    <p>Tipo: {serie.mediaType}</p>
+                    <p>Tipo: {serie.type}</p>
                     <p>SubTipo: {serie.subtype}</p>
                 </div>
                 <button onClick={handleDelete} className="absolute top-0 right-0 btn btn-error btn-sm mt-2 mr-2">
