@@ -1,7 +1,7 @@
 'use client';
 import Link from "next/link";
 import { useState } from "react"
-import { IoBarChart, IoSearchSharp, IoBook, IoPricetagSharp, IoBookmarks, IoAddCircle } from "react-icons/io5";
+import { IoBarChart, IoPeople , IoBook, IoPricetagSharp, IoBookmarks, IoAddCircle } from "react-icons/io5";
 import SidebarHeader from "./header";
 import { Toaster } from "sonner";
 
@@ -12,6 +12,7 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
         { title: "Criar Obra", src: IoAddCircle, link: '/admin/series/create' },
         { title: "Gêneros", src: IoBookmarks, link: '/admin/genres', gap: true },
         { title: "Tags", src: IoPricetagSharp, link: '/admin/tags' },
+        { title: "Forum", src: IoPeople, link: '/admin/forum', gap: true },
     ];
 
     const [open, setOpen] = useState(false);

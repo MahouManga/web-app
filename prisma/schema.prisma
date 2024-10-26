@@ -112,12 +112,12 @@ model Chapter {
 }
 
 model ChapterContent {
-  id        String  @id @default(uuid())
+  id        String             @id @default(uuid())
   type      ChapterContentType
   text      String?
   pages     Page[]
-  chapterID String  @unique
-  chapter   Chapter @relation(fields: [chapterID], references: [id], onDelete: Cascade)
+  chapterID String             @unique
+  chapter   Chapter            @relation(fields: [chapterID], references: [id], onDelete: Cascade)
 }
 
 model Page {
@@ -162,14 +162,60 @@ model Title {
   serie   Serie  @relation(fields: [serieID], references: [id])
 }
 
-model Post {
-  id        String   @id @default(uuid())
-  title     String
-  content   String
-  category  String 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// F O R U M //
+
+model Forum {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  allowTopics Boolean  @default(true)
+  isPublic    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relacionamento com Category
+  categoryId    String?
+  category      ForumCategory?   @relation(fields: [categoryId], references: [id])
+
+  // Recursividade
+  parentForumId Int?
+  parentForum   Forum?  @relation("ParentToChildren", fields: [parentForumId], references: [id])
+  subForums     Forum[] @relation("ParentToChildren")
+
+  threads       Thread[]
 }
 
+model ForumCategory {
+  id            String      @id @default(uuid())
+  name          String      @unique
+  position      Int         @default(0)
+  forums        Forum[]     // Fóruns associados a essa categoria
+}
 
-// F O R U M //
+model Thread {
+  id           String      @id @default(uuid())
+  title        String
+  content      String
+  isPinned     Boolean     @default(false)   // Identifica se o tópico está fixado
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  forumId      Int
+  forum        Forum       @relation(fields: [forumId], references: [id])
+  posts        ThreadPost[]
+}
+
+model ThreadPost {
+  id           String      @id @default(uuid())
+  content      String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  // Relacionamento com Thread
+  threadId     String
+  thread       Thread      @relation(fields: [threadId], references: [id])
+
+  // Citação de outro post
+  quotedPostId String?
+  quotedPost   ThreadPost?       @relation("PostCitation", fields: [quotedPostId], references: [id])
+  citingPosts  ThreadPost[]      @relation("PostCitation")  // Posts que citam este post
+}
