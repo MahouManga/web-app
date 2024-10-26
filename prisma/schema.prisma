@@ -166,6 +166,7 @@ model Post {
   id        String   @id @default(uuid())
   title     String
   content   String
+  category  String 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
