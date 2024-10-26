@@ -3,20 +3,26 @@ import React, { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import ForumItem from "./ForumItem";
-import { CategoryType } from "./types";
+import { ForumCategory } from "./types";
 
 interface SortableCategoryProps {
-  item: CategoryType;
-  onAddSubforum: (parentId: number) => void;
-  onEditCategory: (id: number, newName: string) => void;
+  item: ForumCategory;
+  onAddSubforum?: (parentId: string | number) => void;
+  onEditCategory?: (id: string, newName: string) => void;
+  onDeleteCategory?: (id: string) => void;
+  onEditForum?: (id: string, newName: string) => void;
 }
 
 const SortableCategory: React.FC<SortableCategoryProps> = ({
   item,
   onAddSubforum,
   onEditCategory,
+  onDeleteCategory,
+  onEditForum,
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: item.id,
+  });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -26,6 +32,7 @@ const SortableCategory: React.FC<SortableCategoryProps> = ({
   const [editedName, setEditedName] = useState<string>(item.name);
 
   const handleEdit = () => {
+    if (!onEditCategory) return;
     if (isEditing) {
       onEditCategory(item.id, editedName);
     }
@@ -37,8 +44,7 @@ const SortableCategory: React.FC<SortableCategoryProps> = ({
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className="mb-4 bg-base-100 shadow-md rounded-md p-4 relative"
-    >
+      className="mb-4 bg-base-100 shadow-md rounded-md p-4 relative">
       <div className="flex items-center mb-2 gap-5" {...listeners}>
         {isEditing ? (
           <input
@@ -49,36 +55,47 @@ const SortableCategory: React.FC<SortableCategoryProps> = ({
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <span className="text-lg font-semibold flex-grow text-base-content">{item.name}</span>
+          <span className="text-lg font-semibold flex-grow text-base-content">
+            {item.name}
+          </span>
         )}
         <span className="text-base-content/70">(Posição: {item.position})</span>
-        <button
+        {onAddSubforum && <button
           onClick={(e) => {
             e.stopPropagation();
             onAddSubforum(item.id);
           }}
-          className="ml-auto btn btn-sm btn-primary z-20 relative"
+          className="btn btn-sm btn-primary z-20 relative"
         >
           + Fórum
-        </button>
-        <button
+        </button>}
+        {onEditCategory && <button
           onClick={(e) => {
             e.stopPropagation();
             handleEdit();
           }}
-          className="ml-2 btn btn-sm btn-secondary z-20 relative"
+          className="btn btn-sm btn-secondary z-20 relative"
         >
           {isEditing ? "Salvar" : "Editar"}
-        </button>
+        </button>}
+        {onDeleteCategory && <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDeleteCategory(item.id); // Call deleteCategory with the category ID
+          }}
+          className="btn btn-sm btn-error z-20 relative"
+        >
+          Delete
+        </button>}
       </div>
-      <div className="ml-4">
-        {item.subForums.map((forum) => (
+      <div className="">
+        {item.forums.map((forum) => (
           <ForumItem
             key={forum.id}
             item={forum}
             depth={1}
-            onAddSubforum={onAddSubforum}
-            onEditCategory={onEditCategory}
+            onAddSubforum={onAddSubforum ? onAddSubforum : () => {}}
+            onEditForum={onEditForum ? onEditForum : () => {}}
           />
         ))}
       </div>

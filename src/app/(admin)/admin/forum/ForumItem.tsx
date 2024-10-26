@@ -1,24 +1,29 @@
 // ForumItem.tsx
 import React, { useState } from "react";
-import { ForumItemType } from "./types";
+import { Forum } from "./types";
 
 interface ForumItemProps {
-  item: ForumItemType;
+  item: Forum;
   depth: number;
-  onAddSubforum: (parentId: number) => void;
-  onEditCategory: (id: number, newName: string) => void;
+  onAddSubforum: (parentId: string | number) => void;
+  onEditForum: (id: string | number, newName: string) => void;
 }
 
-const ForumItem: React.FC<ForumItemProps> = ({ item, depth, onAddSubforum, onEditCategory }) => {
+const ForumItem: React.FC<ForumItemProps> = ({
+  item,
+  depth,
+  onAddSubforum,
+  onEditForum,
+}) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editedName, setEditedName] = useState<string>(item.name);
+  const [editedName, setEditedName] = useState<string>(item.title);
 
   const toggleExpand = () => setExpanded((prev) => !prev);
 
   const handleEdit = () => {
     if (isEditing) {
-      onEditCategory(item.id, editedName);
+      onEditForum(item.id, editedName);
     }
     setIsEditing(!isEditing);
   };
@@ -48,7 +53,7 @@ const ForumItem: React.FC<ForumItemProps> = ({ item, depth, onAddSubforum, onEdi
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <span className="font-semibold text-base-content">{item.name}</span>
+          <span className="font-semibold text-base-content">{item.title}</span>
         )}
         <button
           onClick={(e) => {
@@ -77,7 +82,7 @@ const ForumItem: React.FC<ForumItemProps> = ({ item, depth, onAddSubforum, onEdi
               item={child}
               depth={depth + 1}
               onAddSubforum={onAddSubforum}
-              onEditCategory={onEditCategory}
+              onEditForum={onEditForum}
             />
           ))}
         </div>

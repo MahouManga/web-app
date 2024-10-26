@@ -1,16 +1,20 @@
 // types.ts
-export interface ForumItemType {
+export interface Forum {
   id: number;
-  name: string;
-  description?: string;
-  allowTopics?: boolean;
-  isPublic?: boolean;
-  subForums: ForumItemType[];
+  title: string;
+  description: string;
+  allowTopics: boolean;
+  isPublic: boolean;
+  categoryId?: string;
+  parentForumId?: number;
+  subForums: Forum[];
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface CategoryType {
-  id: number;
+export interface ForumCategory {
+  id: string;
   name: string;
   position: number;
-  subForums: ForumItemType[];
+  forums: Forum[];
 }
