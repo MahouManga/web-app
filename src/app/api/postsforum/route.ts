@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/db'; // Certifique-se de usar o caminho correto para o Prisma Client
+import prisma from '@/lib/db';
 
-// Lida com GET para buscar os posts
-export async function GET() {
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const category = url.searchParams.get('category');
+
   try {
     const posts = await prisma.post.findMany({
+      where: {
+        category: category || undefined, // Filtra pela categoria, se fornecida
+      },
       orderBy: {
         createdAt: 'desc', // Ordena por data de criação, do mais recente para o mais antigo
       },
@@ -16,21 +21,19 @@ export async function GET() {
   }
 }
 
-// Lida com POST para criar um novo post
 export async function POST(request: Request) {
   try {
-    const { title, content } = await request.json();
+    const { title, content, category } = await request.json();
 
-    // Validação simples de campos
-    if (!title || !content) {
-      return NextResponse.json({ error: 'Título e conteúdo são obrigatórios.' }, { status: 400 });
+    if (!title || !content || !category) {
+      return NextResponse.json({ error: 'Título, conteúdo e categoria são obrigatórios.' }, { status: 400 });
     }
 
-    // Criação do post no banco de dados usando Prisma
     const post = await prisma.post.create({
       data: {
         title,
         content,
+        category,
       },
     });
 
