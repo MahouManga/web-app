@@ -15,6 +15,8 @@ const ForumPage: React.FC = () => {
   const [data, setData] = useState<ForumCategory[]>([]);
   const [newCategoryName, setNewCategoryName] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [currentForum, setCurrentForum] = useState<Forum | ForumCategory | null>(null);
   const [currentCategoryId, setCurrentCategoryId] = useState<string | number | null>(null);
   const [subforumTitle, setSubforumTitle] = useState<string>("");
   const [subforumDescription, setSubforumDescription] = useState<string>("");
@@ -86,34 +88,8 @@ const ForumPage: React.FC = () => {
       });
       const newSubforum = await response.json();
 
-      // Update local state
-      setData((prevData) => {
-        const updateForums = (categories: ForumCategory[]): ForumCategory[] => {
-          return categories.map((category) => {
-            if (category.id === currentCategoryId) {
-              return {
-                ...category,
-                forums: [...category.forums, newSubforum],
-              };
-            } else {
-              return {
-                ...category,
-                forums: category.forums.map((forum) => {
-                  if (forum.id === currentCategoryId) {
-                    return {
-                      ...forum,
-                      subForums: [...forum.subForums, newSubforum],
-                    };
-                  } else {
-                    return forum;
-                  }
-                }),
-              };
-            }
-          });
-        };
-        return updateForums(prevData);
-      });
+      // Refresh data
+      await fetchCategoriesAndForums();
 
       setModalOpen(false);
       setSubforumTitle("");
@@ -125,102 +101,70 @@ const ForumPage: React.FC = () => {
     }
   };
 
-  // Example updateCategory function
-  const updateCategory = async (id: string, name: string) => {
-    try {
-      const response = await fetch(`/api/forum/category`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id,
-          name
-        }),
-      });
+  // Function to open the edit modal for a category or forum
+  const openEditModal = (forum: Forum | ForumCategory) => {
+    setCurrentForum(forum);
+    setEditModalOpen(true);
 
-      if (!response.ok) {
-        console.error('Failed to update category');
-        return;
-      }
-
-      const updatedCategory = await response.json();
-      await fetchCategoriesAndForums();
-    } catch (error) {
-      console.error('Error updating category:', error);
+    // Set initial values for the edit form
+    if ("title" in forum) {
+      setSubforumTitle(forum.title);
+      setSubforumDescription(forum.description);
+      setAllowTopics(forum.allowTopics);
+      setIsPublic(forum.isPublic);
+    } else {
+      setSubforumTitle(forum.name);
+      setSubforumDescription("");
+      setAllowTopics(true);
+      setIsPublic(true);
     }
   };
 
+  // Function to handle the edit submission
+  const handleEditSubmit = async () => {
+    if (!currentForum) return;
 
-  // Function to edit the name of a category or subforum
-  const editForum = async (id: string | number, newName: string) => {
     try {
-      await fetch("/api/forum", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          name: newName,
-        }),
-      });
-
-      // Update local state
-      setData((prevData) => {
-        const editRecursively = (categories: ForumCategory[]): ForumCategory[] => {
-          return categories.map((category) => {
-            if (category.id === id) {
-              return { ...category, name: newName };
-            } else {
-              return {
-                ...category,
-                forums: category.forums.map((forum) => {
-                  const updatedForum = editForumRecursively(forum);
-                  return updatedForum;
-                }),
-              };
-            }
-          });
-        };
-
-        const editForumRecursively = (forum: Forum): Forum => {
-          if (forum.id === id) {
-            return { ...forum, title: newName };
-          } else {
-            return {
-              ...forum,
-              subForums: forum.subForums.map((subForum) => editForumRecursively(subForum)),
-            };
-          }
-        };
-
-        return editRecursively(prevData);
-      });
-    } catch (error) {
-      console.error("Error editing category/forum:", error);
-    }
-  };
-
-  // deleteCategory function in ForumPage.tsx
-
-  const deleteCategory = async (id: string) => {
-    console.log(id)
-    try {
-      const response = await fetch(`/api/forum/category/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        await fetchCategoriesAndForums();
+      if ("title" in currentForum) {
+        // It's a forum
+        await fetch(`/api/forum/${currentForum.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: subforumTitle,
+            description: subforumDescription,
+            allowTopics,
+            isPublic,
+          }),
+        });
       } else {
-        console.error('Failed to delete category');
+        // It's a category
+        await fetch(`/api/forum/category/${currentForum.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: subforumTitle,
+          }),
+        });
       }
+
+      // Refresh data
+      await fetchCategoriesAndForums();
+      // Reset state
+      setEditModalOpen(false);
+      setCurrentForum(null);
+      setSubforumTitle("");
+      setSubforumDescription("");
+      setAllowTopics(true);
+      setIsPublic(true);
     } catch (error) {
-      console.error('Error deleting category:', error);
+      console.error("Error updating forum/category:", error);
     }
   };
-
 
   // Function to handle the order of categories
   const handleDragEnd = async (event: any) => {
@@ -246,6 +190,23 @@ const ForumPage: React.FC = () => {
       } catch (error) {
         console.error("Error updating category positions:", error);
       }
+    }
+  };
+
+  // Function to delete a category
+  const deleteCategory = async (id: string) => {
+    try {
+      const response = await fetch(`/api/forum/category/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        await fetchCategoriesAndForums();
+      } else {
+        console.error("Failed to delete category");
+      }
+    } catch (error) {
+      console.error("Error deleting category:", error);
     }
   };
 
@@ -284,10 +245,7 @@ const ForumPage: React.FC = () => {
             {data
               .sort((a, b) => a.position - b.position)
               .map((category) => (
-                <SortableCategory
-                  key={category.id}
-                  item={category}
-                />
+                <SortableCategory key={category.id} item={category} />
               ))}
           </SortableContext>
         </DndContext>
@@ -299,8 +257,8 @@ const ForumPage: React.FC = () => {
               key={category.id}
               item={category}
               onAddSubforum={openAddSubforumModal}
-              onEditCategory={updateCategory}
-              onEditForum={editForum}
+              onEditCategory={openEditModal}
+              onEditForum={openEditModal}
               onDeleteCategory={deleteCategory}
             />
           ))
@@ -349,6 +307,60 @@ const ForumPage: React.FC = () => {
             </button>
             <button onClick={addSubforum} className="btn btn-primary">
               Adicionar
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Edit Forum/Category Modal */}
+      <Modal modalOpen={editModalOpen} setModalOpen={setEditModalOpen}>
+        <div className="p-4">
+          <h2 className="text-lg font-bold mb-4">
+            Editar {currentForum && "title" in currentForum ? "Fórum" : "Categoria"}
+          </h2>
+          <input
+            type="text"
+            placeholder="Título"
+            value={subforumTitle}
+            onChange={(e) => setSubforumTitle(e.target.value)}
+            className="input input-bordered w-full mb-4"
+          />
+          {"title" in (currentForum || {}) && (
+            <>
+              <textarea
+                placeholder="Descrição"
+                value={subforumDescription}
+                onChange={(e) => setSubforumDescription(e.target.value)}
+                className="textarea textarea-bordered w-full mb-4"
+              />
+              <div className="flex items-center gap-4 mb-4">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={allowTopics}
+                    onChange={(e) => setAllowTopics(e.target.checked)}
+                    className="toggle toggle-primary"
+                  />
+                  Permitir Tópicos
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={isPublic}
+                    onChange={(e) => setIsPublic(e.target.checked)}
+                    className="toggle toggle-primary"
+                  />
+                  Público
+                </label>
+              </div>
+            </>
+          )}
+          <div className="flex justify-end gap-2">
+            <button onClick={() => setEditModalOpen(false)} className="btn btn-secondary">
+              Cancelar
+            </button>
+            <button onClick={handleEditSubmit} className="btn btn-primary">
+              Salvar
             </button>
           </div>
         </div>
