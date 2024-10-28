@@ -37,7 +37,7 @@ export default async function ForumPage({ params }: { params: Params }) {
                                 </select>
                             </div>
                         </div>
-                        <h2 className="text-2xl font-semibold mb-4">Threads</h2>
+                        <h2 className="text-2xl font-semibold mb-4">Tópicos</h2>
                         {forum.threads && forum.threads.length > 0 ? (
                             <ul className="list-disc ml-5">
                                 {forum.threads.map((thread: any) => (
