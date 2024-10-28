@@ -74,7 +74,7 @@ export default function CreatePage({ forum, user }: { forum: any, user: any }) {
             <div className="">
               <ReactQuill
                 id="content"
-                value={content.replace(/<img src="\/([^"]+)"/g, '<img src="https://cdn.mahoureader.com/$1"')}
+                value={content}
                 onChange={setContent}
                 className="bg-white text-black h-70 overflow-y-auto"
                 theme="snow"

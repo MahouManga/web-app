@@ -115,7 +115,7 @@ export const createForum = async (title: string, description?: string, allowTopi
     return newForum;
 }
 
-export const getForum = async (id: number) => {
+export const getForumByID = async (id: number) => {
     const forum = await prisma.forum.findFirst({
         where: {
             id: Number(id),

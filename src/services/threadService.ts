@@ -23,3 +23,19 @@ export function createTopic(
         },
     });
 }
+
+export function getTopicByID(threadId: string) {
+    return prisma.thread.findUnique({
+        where: {
+            id: threadId,
+        },
+        include: {
+            posts: {
+                include: {
+                    user: true,
+                },
+            },
+            user: true,
+        },
+    });
+}

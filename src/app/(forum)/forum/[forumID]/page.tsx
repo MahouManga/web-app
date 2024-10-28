@@ -1,12 +1,12 @@
 import ForumComponent from "@/components/Forum/ForumComponent";
-import { getForum } from "@/services/forumService";
+import { getForumByID } from "@/services/forumService";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import Link from "next/link";
 import { FaAngleRight } from "react-icons/fa";
 
 export default async function ForumPage({ params }: { params: Params }) {
     const { forumID } = params;
-    const forum = await getForum(forumID);
+    const forum = await getForumByID(forumID);
 
     if (!forum) {
         return (
