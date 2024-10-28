@@ -114,3 +114,17 @@ export const createForum = async (title: string, description?: string, allowTopi
 
     return newForum;
 }
+
+export const getForum = async (id: number) => {
+    const forum = await prisma.forum.findFirst({
+        where: {
+            id: Number(id),
+        },
+        include: {
+            subForums: true,
+            threads: true,
+        },
+    });
+
+    return forum;
+}

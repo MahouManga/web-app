@@ -3,6 +3,7 @@ import { Quill } from "react-quill";
 
 interface QuillToolbarProps {
   toolbarId?: string;
+  className?: string;
 }
 
 // Custom Undo button icon component for Quill editor. You can import it directly
@@ -88,7 +89,7 @@ export const QuillToolbar: React.FC<QuillToolbarProps> = (props) => {
   return (
     <>
       {props.toolbarId !== undefined && (
-        <div id={props.toolbarId} className='bg-white'>
+        <div id={props.toolbarId} className={props.className ?? 'bg-white'}>
           <span className="ql-formats">
             <button className="ql-bold" />
             <button className="ql-italic" />

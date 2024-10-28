@@ -21,18 +21,20 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(uuid())
+  id            String       @id @default(uuid())
   name          String
   email         String
   emailVerified DateTime?
   username      String
   password      String
-  role          userRole  @default(USER)
+  role          userRole     @default(USER)
   image         String?
   background    String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now())
   sessions      Session[]
+  Thread        Thread[]
+  ThreadPost    ThreadPost[]
 }
 
 enum userRole {
@@ -165,7 +167,7 @@ model Title {
 // F O R U M //
 
 model Forum {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
   description String
   allowTopics Boolean  @default(true)
@@ -174,48 +176,53 @@ model Forum {
   updatedAt   DateTime @updatedAt
 
   // Relacionamento com Category
-  categoryId    String?
-  category      ForumCategory?   @relation(fields: [categoryId], references: [id])
+  categoryId String?
+  category   ForumCategory? @relation(fields: [categoryId], references: [id])
 
   // Recursividade
   parentForumId Int?
   parentForum   Forum?  @relation("ParentToChildren", fields: [parentForumId], references: [id])
   subForums     Forum[] @relation("ParentToChildren")
 
-  threads       Thread[]
+  threads Thread[]
 }
 
 model ForumCategory {
-  id            String      @id @default(uuid())
-  name          String      @unique
-  position      Int         @default(0)
-  forums        Forum[]     // Fóruns associados a essa categoria
+  id       String  @id @default(uuid())
+  name     String  @unique
+  position Int     @default(0)
+  forums   Forum[] // Fóruns associados a essa categoria
 }
 
 model Thread {
-  id           String      @id @default(uuid())
-  title        String
-  content      String
-  isPinned     Boolean     @default(false)   // Identifica se o tópico está fixado
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  forumId      Int
-  forum        Forum       @relation(fields: [forumId], references: [id])
-  posts        ThreadPost[]
+  id        String       @id @default(uuid())
+  title     String
+  isPinned  Boolean      @default(false) // Identifica se o tópico está fixado
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  forumId   Int
+  forum     Forum        @relation(fields: [forumId], references: [id])
+  posts     ThreadPost[]
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
 }
 
 model ThreadPost {
-  id           String      @id @default(uuid())
-  content      String
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamento com User
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
   // Relacionamento com Thread
-  threadId     String
-  thread       Thread      @relation(fields: [threadId], references: [id])
+  threadId String
+  thread   Thread @relation(fields: [threadId], references: [id])
 
   // Citação de outro post
   quotedPostId String?
-  quotedPost   ThreadPost?       @relation("PostCitation", fields: [quotedPostId], references: [id])
-  citingPosts  ThreadPost[]      @relation("PostCitation")  // Posts que citam este post
+  quotedPost   ThreadPost?  @relation("PostCitation", fields: [quotedPostId], references: [id])
+  citingPosts  ThreadPost[] @relation("PostCitation") // Posts que citam este post
 }
