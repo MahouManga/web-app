@@ -6,11 +6,13 @@ import { getSerie } from '@/services/serieService';
 import NotFoundPage from '@/components/NotFoundPage';
 import { getChapters } from '@/services/chapterService';
 import Background from './Background';
+import CommentsSection from '@/components/Comments/CommentsSection';
+import { validateRequest } from '@/lib/auth';
 
 export default async function SeriePage({params}: any) {
   const { id } = params;
   const serie = await getSerie(Number(id[0]));
-  console.log(serie)
+  const { user } = await validateRequest();
   
   if(!serie.data) {
     return (<NotFoundPage/>)
@@ -32,6 +34,7 @@ export default async function SeriePage({params}: any) {
             <RightSide serie={serie.data} chapters={chapters} />
           </div>
         </section>
+        <CommentsSection itemId={serie.data.id} user={user} type={"serie"}/>
       </main>
     </>
   );

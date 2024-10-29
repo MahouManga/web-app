@@ -21,20 +21,23 @@ model Session {
 }
 
 model User {
-  id            String       @id @default(uuid())
-  name          String
-  email         String
-  emailVerified DateTime?
-  username      String
-  password      String
-  role          userRole     @default(USER)
-  image         String?
-  background    String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @default(now())
-  sessions      Session[]
-  Thread        Thread[]
-  ThreadPost    ThreadPost[]
+  id                 String               @id @default(uuid())
+  name               String
+  email              String
+  emailVerified      DateTime?
+  username           String
+  password           String
+  role               userRole             @default(USER)
+  image              String?
+  background         String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @default(now())
+  sessions           Session[]
+  Thread             Thread[]
+  ThreadPost         ThreadPost[]
+  Comments           Comments[]
+  CommentReactions   CommentReactions[]
+  UserProfileComment UserProfileComment[] @relation("UserProfileComments")
 }
 
 enum userRole {
@@ -81,6 +84,7 @@ model Serie {
   authors     Author[]     @relation("AuthorToSerie")
   tags        Tag[]        @relation("TagToSerie")
   chapters    Chapter[]
+  Comments    Comments[]
 }
 
 enum SerieType {
@@ -111,6 +115,7 @@ model Chapter {
   serie           Serie?             @relation(fields: [serieID], references: [id], onDelete: Cascade)
   content         ChapterContent?
   UserReadHistory UserReadHistory[]
+  Comments        Comments[]
 }
 
 model ChapterContent {
@@ -162,6 +167,63 @@ model Title {
   type    String
   serieID Int
   serie   Serie  @relation(fields: [serieID], references: [id])
+}
+
+// COMMENTS //
+
+model Comments {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamento com o autor do comentário
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relacionamento com Série
+  serieID Int?
+  serie   Serie? @relation(fields: [serieID], references: [id])
+
+  // Relacionamento com Capítulo
+  chapterID String?
+  chapter   Chapter? @relation(fields: [chapterID], references: [id])
+
+  // Comentários em resposta a outros comentários
+  parentID String?
+  parent   Comments?  @relation("ParentComments", fields: [parentID], references: [id])
+  replies  Comments[] @relation("ParentComments")
+
+  // Reações ao comentário
+  CommentReactions   CommentReactions[]
+  UserProfileComment UserProfileComment[]
+}
+
+model UserProfileComment {
+  id            String   @id @default(uuid())
+  profileUserId String // ID do usuário cujo perfil está sendo comentado
+  profileUser   User     @relation("UserProfileComments", fields: [profileUserId], references: [id], onDelete: Cascade)
+  commentId     String // ID do comentário associado ao perfil
+  comment       Comments @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model CommentReactions {
+  id           String       @id @default(uuid())
+  commentId    String
+  comment      Comments     @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reactionType ReactionType // Define se é um "like" ou "dislike"
+  createdAt    DateTime     @default(now())
+
+  @@unique([commentId, userId]) // Garante que cada usuário possa reagir apenas uma vez por comentário
+}
+
+enum ReactionType {
+  LIKE
+  DISLIKE
 }
 
 // F O R U M //

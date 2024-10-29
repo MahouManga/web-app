@@ -148,7 +148,7 @@ export default function TopicPage({ topic, forum, user }: any) {
                                                 id="content"
                                                 value={content}
                                                 onChange={setContent}
-                                                className="bg-base-100 h-60 overflow-y-auto"
+                                                className="bg-base-100 h-70 overflow-y-auto"
                                                 theme="snow"
                                                 modules={modules('t2')}
                                                 formats={formats}
