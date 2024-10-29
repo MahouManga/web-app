@@ -22,7 +22,7 @@ export default function CreatePage({ forum, user }: { forum: any, user: any }) {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('/api/forum/topics', {
+      const response = await fetch('/api/forum/post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -7,7 +7,7 @@ import { getTopicByID } from "@/services/threadService";
 export default async function Page({ params }: { params: Params }) {
   const { forumID, topicID } = params;
   const forum = await getForumByID(forumID);
-  const user = await validateRequest();
+  const { user } = await validateRequest();
   const topic = await getTopicByID(topicID);
 
   if (!forum || !topic) {

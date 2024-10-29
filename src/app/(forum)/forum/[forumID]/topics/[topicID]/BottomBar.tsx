@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { threadId } from "worker_threads";
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: true });
 
 const formats = [
@@ -18,13 +19,44 @@ const formats = [
   "color", "code-block"
 ];
 
-export default function BottomBar() {
+export default function BottomBar({ user, topic }: any) {
+  const router = useRouter();
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [content, setContent] = useState('');
 
   const toggleReplyBox = () => {
     setShowReplyBox(!showReplyBox);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch('/api/forum/post', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          threadId: topic.id,
+          userId: user.id,
+          content,
+        })
+      });
+
+      const dataResponse = await response.json();
+
+      if (response.ok) {
+        setShowReplyBox(false);
+        setContent('');
+        toast.success("Mensagem Enviada com sucesso!");
+        router.refresh();
+      } else {
+        toast.error("Erro ao criar o tópico.");
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      toast.error("Erro ao criar o tópico.");
+    }
   };
 
   return (
@@ -39,7 +71,7 @@ export default function BottomBar() {
                 <button className="btn btn-secondary" onClick={() => setShowPreview(!showPreview)}>
                   {showPreview ? 'Editor' : 'Pré-visualizar'}
                 </button>
-                <button className="btn btn-primary" onClick={toggleReplyBox}>
+                <button className="btn btn-primary" onClick={handleSubmit}>
                   Enviar Mensagem
                 </button>
               </div>

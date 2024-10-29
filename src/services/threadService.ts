@@ -34,8 +34,44 @@ export function getTopicByID(threadId: string) {
                 include: {
                     user: true,
                 },
+                orderBy: {
+                    createdAt: 'asc',
+                },
             },
             user: true,
+        },
+    });
+}
+
+export function createPost(threadId: string, userId: string, content: string, citingPostId?: string[]) {
+    return prisma.threadPost.create({
+        data: {
+            threadId,
+            content,
+            userId,
+            ...(citingPostId && citingPostId.length > 0
+                ? {
+                    citingPosts: {
+                        connect: citingPostId.map(id => ({ id }))
+                    }
+                }
+                : {}),
+        },
+    });
+}
+
+export function updatePost(
+    userId: string,
+    postId: string,
+    content: string
+) {
+    return prisma.threadPost.update({
+        where: {
+            id: postId,
+            userId: userId,
+        },
+        data: {
+            content,
         },
     });
 }
