@@ -9,6 +9,14 @@ export default async function Page({ params }: { params: Params }) {
 
     const forum = await getForumByID(forumID);
 
+    if(!user) {
+        return (
+            <div className="text-center py-10">
+                User not found
+            </div>
+        )
+    }
+
     if (!forum) {
         return (
             <div className="text-center py-10">
