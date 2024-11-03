@@ -17,7 +17,7 @@ export default function Page() {
   return (
     <div className="flex min-h-screen">
       {/* Esquerda */}
-      <div className="w-1/2 flex flex-col justify-center items-center bg-base-100 text-base-content">
+      <div className="md:w-1/2 w-full flex flex-col justify-center items-center bg-base-100 text-base-content">
         <div className="w-full max-w-md p-8 space-y-4">
           {/* Botão Voltar */}
           <div className="w-full flex">
@@ -94,7 +94,7 @@ export default function Page() {
         </div>
       </div>
       {/* Direita */}
-      <div className="w-1/2 bg-neutral-content flex justify-center items-center">
+      <div className="w-1/2 bg-neutral-content flex md:visible invisible justify-center items-center">
         <div className="flex flex-col justify-center items-center space-y-4">
           <img
             src="/images/parrot.png"

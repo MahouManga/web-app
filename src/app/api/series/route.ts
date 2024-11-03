@@ -5,7 +5,6 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const title = searchParams.get('title');
-    console.log(title)
 
     if (title !== null) {
       const series = await getSerieByTitle(title);

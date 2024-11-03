@@ -8,11 +8,13 @@ import { getChapters } from '@/services/chapterService';
 import Background from './Background';
 import CommentsSection from '@/components/Comments/CommentsSection';
 import { validateRequest } from '@/lib/auth';
+import { getLibraryRatings } from '@/services/libraryService';
 
 export default async function SeriePage({params}: any) {
   const { id } = params;
   const serie = await getSerie(Number(id[0]));
   const { user } = await validateRequest();
+  const libraryRatings = await getLibraryRatings(Number(id[0]));
   
   if(!serie.data) {
     return (<NotFoundPage/>)
@@ -30,7 +32,7 @@ export default async function SeriePage({params}: any) {
         {/* Main Content */}
         <section className='bg-base-100 lg:z-10 relative flex w-full justify-center'>
           <div className='grid grid-cols-12 pt-3 gap-y-3 gap-x-3 container px-5 text-foreground bg-base-100 text-base-content'>
-            <LeftSide serie={serie.data} />
+            <LeftSide user={user} serie={serie.data} ratings={libraryRatings} />
             <RightSide serie={serie.data} chapters={chapters} />
           </div>
         </section>

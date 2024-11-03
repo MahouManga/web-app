@@ -346,8 +346,6 @@ export const getSeriesRecently = async (): Promise<SerieDataList> => {
             },
         });
 
-        console.log(series)
-
         return { data: series };
     } catch (error) {
         return {

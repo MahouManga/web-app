@@ -38,6 +38,7 @@ model User {
   Comments           Comments[]
   CommentReactions   CommentReactions[]
   UserProfileComment UserProfileComment[] @relation("UserProfileComments")
+  UserLibrary        UserLibrary[]
 }
 
 enum userRole {
@@ -53,6 +54,10 @@ model UserLibrary {
   notification Boolean
   status       Int     @default(0)
   rating       Int?
+  userId       String
+  serieID      Int
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serie        Serie   @relation(references: [id], fields: [serieID], onDelete: Cascade)
 }
 
 model UserReadHistory {
@@ -63,28 +68,46 @@ model UserReadHistory {
   chapter   Chapter  @relation(references: [id], fields: [chapterID], onDelete: Cascade)
 }
 
+// VIEWS //
+
+model ViewLog {
+  id         Int      @id @default(autoincrement())
+  views      Int      @default(0)
+  type       String // 'daily', 'weekly', 'monthly'
+  createdAt  DateTime @default(now())
+  expiryDate DateTime
+  serieID    Int
+  serie      Serie    @relation(fields: [serieID], references: [id], onDelete: Cascade)
+
+  @@unique([serieID, type, expiryDate])
+}
+
+// SERIE //
+
 model Serie {
-  id          Int          @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   title       String
   slug        String
   synopsis    String
   description String?
   status      Int
-  adult       Boolean      @default(false)
+  adult       Boolean       @default(false)
   posterImage String?
   coverImage  String?
   type        SerieType // Novel | Manga -> image or text
   subtype     SerieSubtype // Subtype
-  views       Int          @default(0)
+  views       Int           @default(0)
   releasedAt  Int
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @default(now())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now())
   titles      Title[]
-  genres      Genre[]      @relation("GenreToSerie")
-  authors     Author[]     @relation("AuthorToSerie")
-  tags        Tag[]        @relation("TagToSerie")
+  genres      Genre[]       @relation("GenreToSerie")
+  authors     Author[]      @relation("AuthorToSerie")
+  tags        Tag[]         @relation("TagToSerie")
   chapters    Chapter[]
   Comments    Comments[]
+  ViewLog     ViewLog[]
+  UserLibrary UserLibrary[]
 }
 
 enum SerieType {

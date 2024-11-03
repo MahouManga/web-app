@@ -6,7 +6,6 @@ type Trending = {
     [key: string]: any[];
 };
 
-
 export default async function Page() {
     const recently = await getSeriesRecently();
 
