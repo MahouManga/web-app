@@ -21,3 +21,5 @@ export function getColors(statusValue: number) {
     };
     return statusMap[statusValue] || "bg-gray-300";
 }
+
+export const statusNames = ["Nenhum Status", "Lendo", "Lido", "Pretendo Ler", "Dropado", "Sem Interesse"];

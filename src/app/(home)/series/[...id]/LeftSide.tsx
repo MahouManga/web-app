@@ -2,24 +2,58 @@
 
 import { LibraryRatingsData } from '@/services/libraryService';
 import { SeriePlus } from '@/services/serieService';
-import { getStatusText } from '@/utils/projectStatus';
+import { getStatusText, statusNames } from '@/utils/projectStatus';
 import { User } from 'lucia';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { IoBook, IoBookmarkOutline, IoHeartOutline, IoStar, IoEye, IoBookmark } from 'react-icons/io5';
+import { useEffect, useRef, useState } from 'react';
+import { IoBook, IoBookmarkOutline, IoStar, IoEye, IoBookmark, IoNotificationsOutline, IoNotifications } from 'react-icons/io5';
 
-export default function LeftSide({ user, serie, ratings }: { user: User | null, serie: SeriePlus, ratings: LibraryRatingsData }) {
+export default function LeftSide({ user, serie, ratings, library }: { user: User | null, serie: SeriePlus, ratings: LibraryRatingsData, library: any }) {
   const [imgSrc, setImgSrc] = useState(`/images/series/${serie.id}/posterImage`);
-  const [viewRegistered, setViewRegistered] = useState(false);
+  const viewRegisteredRef = useRef(false); // Use useRef em vez de useState
+  const [bookmark, setBookmark] = useState(library && library.bookmark ? library.bookmark : false);
+  const [notification, setNotification] = useState(library && library.notification ? library.notification : false);
+  const [rating, setRating] = useState(library && library.rating ? library.rating : -1);
+  const [status, setStatus] = useState(library && library.status ? library.status : 0);
+
+  console.log(library)
 
   const handleError = () => {
     setImgSrc('/noImage.jpg');
   };
 
+  const handleAddToLibrary = async (type: string, args?: any) => {
+    try {
+      if (!user) return;
+      const response = await fetch('/api/user/marks', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          serieID: serie.id,
+          option: type,
+          args: args,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+
   useEffect(() => {
     const registerView = async () => {
       try {
-        if (!viewRegistered) {
+        if (!viewRegisteredRef.current) {
           await new Promise(resolve => setTimeout(resolve, 4000)); // Espera de 4 segundos
           const response = await fetch(`/api/views`, {
             method: 'POST',
@@ -33,17 +67,19 @@ export default function LeftSide({ user, serie, ratings }: { user: User | null, 
             throw new Error('Erro ao registrar visualização');
           }
 
-          setViewRegistered(true); // Marca que a visualização foi registrada
+          viewRegisteredRef.current = true; // Marca que a visualização foi registrada
         }
       } catch (error) {
         console.error('Erro ao registrar visualização:', error);
       }
     };
 
-    if (serie && !viewRegistered) {
+    if (serie && !viewRegisteredRef.current) {
       registerView();
     }
   }, [serie]);
+
+
 
   return (
     <div className='col-span-12 lg:col-span-3 relative flex justify-center w-full lg:min-h-[750px] text-base-content'>
@@ -77,16 +113,22 @@ export default function LeftSide({ user, serie, ratings }: { user: User | null, 
             </div>
           </li>
         </div>
-        <div className="w-5/6 sm:block">
+        {user &&<div className="w-5/6 sm:block">
           <div className="flex justify-center text-3.5 md:text-4">
-            <button className="btn btn-ghost btn-square">
-              <IoBookmarkOutline size={32} />
+            <button className="btn btn-ghost btn-square" onClick={() => {
+              handleAddToLibrary('bookmark', !bookmark);
+              setBookmark(!bookmark);
+            }}>
+              { bookmark ? <IoBookmark size={32} /> :  <IoBookmarkOutline size={32} /> }
             </button>
-            <button className="btn btn-ghost btn-square">
-              <IoHeartOutline size={32} />
+            <button className="btn btn-ghost btn-square" onClick={() => {
+              handleAddToLibrary('notification', !notification);
+              setNotification(!notification);
+            }}>
+              {  notification ? <IoNotifications size={32} /> : <IoNotificationsOutline size={32} /> }
             </button>
           </div>
-        </div>
+        </div>}
         <div className="space-y-2 rounded p-5 bg-muted/10 w-full">
           <div className="flex justify-between w-full">
             <span className="text-muted-foreground">Status</span>
@@ -113,7 +155,32 @@ export default function LeftSide({ user, serie, ratings }: { user: User | null, 
           <div className="form-control w-full">
             <div className="relative">
               <select
-                className="select select-bordered w-full">
+                className="select select-bordered w-full"
+                value={status}
+                onChange={(e) => {
+                  handleAddToLibrary('status', e.target.value)
+                  setStatus(Number(e.target.value))
+                }}
+              >
+                {statusNames.map((name, index) => (
+                  <option key={index} value={index}>{name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
+
+        {user && (
+          <div className="form-control w-full">
+            <div className="relative">
+              <select
+                className="select select-bordered w-full"
+                onChange={(e) => {
+                  handleAddToLibrary('rating', e.target.value)
+                  setRating(Number(e.target.value))
+                }}
+                value={rating}
+              >
                 <option key={-1} value={-1}>Remover Nota</option>
                 <option key={0} value={0}>0 - Podre</option>
                 <option key={1} value={1}>1 - Lixo</option>

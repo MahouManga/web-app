@@ -29,15 +29,15 @@ export default function ProfilePage({ user, tabs, selectedTab }: any) {
                     </div>
                     <div className='flex text-white md:gap-10 gap-5 pb-4 pr-4 text-center'>
                         <div className='flex gap-3'>
-                            <p>10</p>
+                            <p>0</p>
                             <h3>Publicações</h3>
                         </div>
                         <div className='flex gap-3'>
-                            <p>100</p>
+                            <p>0</p>
                             <h3>Seguidores</h3>
                         </div>
                         <div className='flex gap-3'>
-                            <p>300</p>
+                            <p>0</p>
                             <h3>Seguindo</h3>
                         </div>
                     </div>

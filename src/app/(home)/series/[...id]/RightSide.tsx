@@ -2,16 +2,47 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { IoBook, IoReader } from 'react-icons/io5';
+import { IoBook, IoBookOutline, IoReader } from 'react-icons/io5';
 import { HiOutlineSwitchVertical } from 'react-icons/hi';
 import { SeriePlus } from '@/services/serieService';
 import { getStatusText } from '@/utils/projectStatus';
+import { User } from 'lucia';
 
-export default function RightSide({ serie, chapters }: { serie: SeriePlus, chapters: any }) {
+export default function RightSide({ serie, chapters, user, readed }: { serie: SeriePlus, chapters: any, user: User | null, readed: any }) {
   const [tab, setTab] = useState('About');
   const [isDescending, setIsDescending] = useState(false);
+  const [readHistory, setReadHistory] = useState(new Set(user ? readed.map((item:any) => item.chapterID) : []));
+
+  const toggleReadStatus = async (chapterId: string) => {
+    if (!user) return;
+
+    const isRead = readHistory.has(chapterId);
+
+    try {
+      const response = await fetch(`/api/user/read`, {
+        method: isRead ? 'DELETE' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, serieID: serie.id, chapterID: chapterId }),
+      });
+
+      if (response.ok) {
+        setReadHistory((prev) => {
+          const updatedHistory = new Set(prev);
+          if (isRead) {
+            updatedHistory.delete(chapterId);
+          } else {
+            updatedHistory.add(chapterId);
+          }
+          return updatedHistory;
+        });
+      }
+    } catch (error) {
+      console.error('Error toggling read status:', error);
+    }
+  };
+
 
   // Sorting chapters
   const sortedChapters = [...chapters].sort((a, b) => {
@@ -97,8 +128,10 @@ export default function RightSide({ serie, chapters }: { serie: SeriePlus, chapt
             <div className="grid md:grid-cols-2 gap-4 p-4 bg-base-300 rounded-lg max-h-[400px] overflow-y-auto custom-scrollbar">
               {sortedChapters.map((chapter) => (
                 <div className="flex w-full items-center bg-neutral text-neutral-content p-2 rounded-lg shadow btn" key={chapter.id}>
-                  <div className="flex-shrink-0 w-[8%]">
-                    <IoBook size={18} />
+                  <div className="flex-shrink-0 w-[8%] hover:cursor-pointer"
+                  onClick={() => toggleReadStatus(chapter.id)}
+                  >
+                  {readHistory.has(chapter.id) ? <IoBook size={18} /> : <IoBookOutline size={18} />}
                   </div>
                   <div className="flex-grow w-[10%] xl:w-[60%]">
                     <Link href={`/ler/${chapter.id}`} className="flex justify-between items-center">

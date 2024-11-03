@@ -2,9 +2,8 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import ProfilePage from "./Perfil";
 import Overview from "./overview";
 import { validateRequest } from "@/lib/auth";
-import NovelList from "./novellist";
-import MangaList from "./mangalist";
 import { getUserByUsername } from "@/services/userService";
+import ReadingList from "./readingList";
 
 export default async function Page({ params }: { params: Params }) {
 
@@ -14,10 +13,9 @@ export default async function Page({ params }: { params: Params }) {
     const tabNavigate = username[1] ?? 'overview';
 
     const tabs = [
-        { name: 'Overview', url: '', href: '/', component: <Overview /> },
-        { name: 'Novel List', url: 'novellist', href: '/novellist', component: <NovelList /> },
-        { name: 'Manga List', url: 'mangalist', href: '/mangalist', component: <MangaList/> },
-        { name: 'Favorites', url: 'favorites', href: '/favorites' },
+        { name: 'Overview', url: '', href: '/', component: <Overview user={user} /> },
+        { name: 'Novel List', url: 'novellist', href: '/novellist', component: <ReadingList user={user} type='NOVEL' /> },
+        { name: 'Manga List', url: 'mangalist', href: '/mangalist', component: <ReadingList user={user} type='MANGA'/> },
         { name: 'Stats', url: 'stats', href: '/stats' },
         { name: 'Social', url: 'social', href: '/social' },
         { name: 'Reviews', url: 'reviews', href: '/reviews' },
@@ -27,7 +25,7 @@ export default async function Page({ params }: { params: Params }) {
     // Função para encontrar o componente correspondente com base na URL
     const selectedTab = tabs.find(tab => tab.url === tabNavigate) || tabs[0];
     const renderTabComponent = () => {
-        return selectedTab?.component ?? <Overview />;
+        return selectedTab?.component ?? <Overview user={user} />;
     };
 
     return (

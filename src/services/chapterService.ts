@@ -159,3 +159,25 @@ export async function updateMangaChapter(chapterData: any) {
     // Retorna o capítulo atualizado
     return await prisma.chapter.findUnique({ where: { id: chapterID } });
 }
+
+export async function updateNovelChapter(chapterData: any) {
+    const { title, index, volume, type, id, contentText } = chapterData;
+    console.log(type)
+    
+    const newchapter = await prisma.chapter.update({
+        where: { id: id },
+        data: {
+            title,
+            index: Number(index),
+            volume: Number(volume),
+            type,
+            content: {
+                update: {
+                    type: type,
+                    text: contentText
+                }
+            }
+        }
+    });
+    return newchapter
+}

@@ -8,13 +8,17 @@ import { getChapters } from '@/services/chapterService';
 import Background from './Background';
 import CommentsSection from '@/components/Comments/CommentsSection';
 import { validateRequest } from '@/lib/auth';
-import { getLibraryRatings } from '@/services/libraryService';
+import { chaptersReaded, getLibraryRatings, getUserLibraryOnSerie } from '@/services/libraryService';
+import { User } from 'lucia';
 
 export default async function SeriePage({params}: any) {
   const { id } = params;
   const serie = await getSerie(Number(id[0]));
   const { user } = await validateRequest();
   const libraryRatings = await getLibraryRatings(Number(id[0]));
+
+  let userLibrary = user ? await getUserLibraryOnSerie((user as User).id, Number(id[0])) : null;
+  let userChaptersRead = user ? await chaptersReaded((user as User).id, Number(id[0])) : null;
   
   if(!serie.data) {
     return (<NotFoundPage/>)
@@ -32,8 +36,8 @@ export default async function SeriePage({params}: any) {
         {/* Main Content */}
         <section className='bg-base-100 lg:z-10 relative flex w-full justify-center'>
           <div className='grid grid-cols-12 pt-3 gap-y-3 gap-x-3 container px-5 text-foreground bg-base-100 text-base-content'>
-            <LeftSide user={user} serie={serie.data} ratings={libraryRatings} />
-            <RightSide serie={serie.data} chapters={chapters} />
+            <LeftSide user={user} serie={serie.data} ratings={libraryRatings} library={userLibrary} />
+            <RightSide user={user} serie={serie.data} chapters={chapters} readed={userChaptersRead} />
           </div>
         </section>
         <CommentsSection itemId={serie.data.id} user={user} type={"serie"}/>

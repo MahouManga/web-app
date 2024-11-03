@@ -346,7 +346,14 @@ export const getSeriesRecently = async (): Promise<SerieDataList> => {
             },
         });
 
-        return { data: series };
+        // Ordenar as novels pelo capítulo mais recente no lado do JavaScript
+        const sortedNovels = series.sort((a: SeriePlus, b: SeriePlus) => {
+            const latestChapterA = a.chapters?.[0]?.createdAt || new Date(0);
+            const latestChapterB = b.chapters?.[0]?.createdAt || new Date(0);
+            return new Date(latestChapterB).getTime() - new Date(latestChapterA).getTime();
+        }).slice(0, 20); // Limitar a 20 novels
+
+        return { data: sortedNovels };
     } catch (error) {
         return {
             error: {

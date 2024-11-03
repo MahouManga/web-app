@@ -5,6 +5,7 @@ import { DndContext, useSensor, useSensors, PointerSensor } from "@dnd-kit/core"
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface ImageItem {
     id: string;
@@ -47,6 +48,7 @@ const SortableItem = ({ id, src, imageURL, isUploaded, onRemove, index }: ImageI
 };
 
 export default function MangaEditor({ serie, chapter, formData, chapterID, editorState }: any) {
+    const router = useRouter();
     const [viewMode, setViewMode] = useState<number>(1);
     const [images, setImages] = useState<ImageItem[]>(chapter && chapter.content ? chapter.content.pages : []);
     const [zipFile, setZipFile] = useState<File | null>(null);
@@ -205,6 +207,8 @@ export default function MangaEditor({ serie, chapter, formData, chapterID, edito
                         },
                         body: JSON.stringify({ serieID: serie.id, chapterID: chapterId, imagens: responseData.images, type:'MANGA', ...formData }),
                     });
+
+                    router.push(`/admin/series/${serie.id}`);
                 } catch (error) {
                     toast.error("Error update page Images.");
                     console.error("Error update page:", error);
