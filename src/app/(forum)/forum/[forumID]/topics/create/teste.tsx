@@ -25,7 +25,7 @@ export default function TopicoPage() {
       <div className="text-sm breadcrumbs text-neutral-content">
         <ul>
           <li><a href="#" className="text-neutral-content hover:text-primary-content">MahouHeader</a></li>
-          <li><a href="#" className="text-neutral-content hover:text-primary-content">osul</a></li>
+          <li><a href="#" className="text-neutral-content hover:text-primary-content">???</a></li>
         </ul>
       </div>
       <div className="flex justify-between items-center mt-4 bg-base-300 p-4 rounded-lg">

@@ -2,6 +2,7 @@
 
 import EditorToolbar, { modules } from "@/components/editorToolBar";
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import 'react-quill/dist/quill.snow.css';
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -53,7 +54,10 @@ export default function CreatePage({ forum, user }: { forum: any, user: any }) {
     <div>
       <div className="bg-base-300 p-6 rounded-lg space-y-4">
         <div>
-          <h3>{forum.title}</h3>
+          <nav className="text-sm text-base-content mb-4">
+            <Link href="/forum" className="hover:underline">Mahou Reader Fóruns</Link> <span className="mx-1"><span className="mx-1">&rsaquo;</span></span> 
+            <Link href={`/forum/${forum.id}`} className="hover:underline">{forum.title}</Link>
+          </nav>
         </div>
         <div className='flex justify-between items-center'>
           <h2 className="text-2xl font-semibold">Criar novo tópico</h2>
@@ -90,5 +94,5 @@ export default function CreatePage({ forum, user }: { forum: any, user: any }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
