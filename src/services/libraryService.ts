@@ -301,3 +301,54 @@ export async function getUserSeriesByType(userId: string, type: 'NOVEL' | 'MANGA
         throw error;
     }
 }
+
+export async function getUserComments(userId: string, page: number, pageSize: number = 2) {
+    try {
+        const skip = (page - 1) * pageSize;
+
+        const [comments, totalComments] = await Promise.all([
+            prisma.comments.findMany({
+                where: { userId },
+                include: {
+                    serie: {
+                        select: {
+                            id: true,
+                            title: true,
+                        },
+                    },
+                    chapter: {
+                        select: {
+                            id: true,
+                            title: true,
+                            index: true,
+                            volume: true,
+                        },
+                    },
+                    parent: {
+                        select: {
+                            user: true,
+                            content: true,
+                        },
+                    }
+                },
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take: pageSize,
+            }),
+            prisma.comments.count({
+                where: { userId },
+            }),
+        ]);
+
+        const totalPages = Math.ceil(totalComments / pageSize);
+
+        return {
+            comments,
+            totalComments,
+            totalPages,
+        };
+    } catch (error) {
+        console.error('Error fetching user comments:', error);
+        throw error;
+    }
+}

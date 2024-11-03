@@ -68,7 +68,7 @@ export default function NovelEditor({ editorState, setEditorState, chapter, chap
                     <div className="">
                         <ReactQuill
                             id="content"
-                            value={content.replace(/<img src="\/([^"]+)"/g, '<img src="https://cdn.mahoureader.com/$1"')}
+                            value={content}
                             onChange={handleEditorChange}
                             className="bg-white text-black mb-5 h-150 overflow-y-auto"
                             theme="snow"
@@ -83,7 +83,7 @@ export default function NovelEditor({ editorState, setEditorState, chapter, chap
                     <div
                         className="p-5 text-base-content rounded-lg h-150 overflow-y-auto chapter-section"
                         dangerouslySetInnerHTML={{
-                            __html: content.replace(/<img src="\/([^"]+)"/g, '<img src="https://cdn.mahoureader.com/$1"')
+                            __html: content
                         }}
                     />
                 </div>

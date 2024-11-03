@@ -169,7 +169,7 @@ export default function CommentsSection({ itemId, user, type }: any) {
               </div>
               {!collapsedComments[reply.id] && (
                 <>
-                  <p className="text-gray-300" dangerouslySetInnerHTML={{ __html: reply.content }}></p>
+                  <p className="text-gray-300 topic-post" dangerouslySetInnerHTML={{ __html: reply.content }}></p>
                   <div className="flex items-center space-x-4 mt-2">
                     <button onClick={() => handleLike(reply.id)} className="text-gray-400 hover:text-white flex items-center space-x-1">
                       <MdThumbUp /> <span>{reply.likes || 0}</span>
@@ -237,7 +237,7 @@ export default function CommentsSection({ itemId, user, type }: any) {
                   </div>
                   {!collapsedComments[comment.id] && (
                     <>
-                      <p className="text-gray-300 whitespace-pre-line" dangerouslySetInnerHTML={{ __html: comment.content }}></p>
+                      <p className="text-gray-300 whitespace-pre-line topic-post" dangerouslySetInnerHTML={{ __html: comment.content }}></p>
                       <div className="flex items-center space-x-4 mt-2">
                         <button
                           onClick={() => handleLike(comment.id)}

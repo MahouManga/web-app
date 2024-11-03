@@ -231,6 +231,12 @@
 }
 
 /* Forum POST */
+.topic-post {
+  display:flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
 .topic-post h4 {
   font-size: 2rem;
   font-weight: 100;
@@ -271,4 +277,9 @@
 
 .topic-post strong {
   font-weight: 700;
+}
+
+.topic-post img {
+  max-height: 400px;
+  width: auto;
 }

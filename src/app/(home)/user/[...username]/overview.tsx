@@ -9,7 +9,7 @@ export default async function Overview({ user }: {user: any}) {
     return (
         <div className='w-full'>
             <div className='flex gap-10 justify-center w-full mt-1'>
-                <div className='flex gap-5 bg-base-100 p-5 rounded-xl'>
+                <div className='flex gap-5 bg-secondary-content p-5 rounded-xl'>
                     <div className='text-center'>
                         <h3 className='text-info'>{status?.totalSeries.NOVEL}</h3>
                         <label>Total Novel</label>
@@ -19,7 +19,7 @@ export default async function Overview({ user }: {user: any}) {
                         <label>Capitulos Lidos</label>
                     </div>
                 </div>
-                <div className='flex gap-5 bg-base-100 p-5 rounded-xl'>
+                <div className='flex gap-5 bg-secondary-content p-5 rounded-xl'>
                     <div className='text-center'>
                         <h3 className='text-info'>{status?.totalSeries.MANGA}</h3>
                         <label>Total Manga</label>

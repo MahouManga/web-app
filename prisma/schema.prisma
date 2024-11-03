@@ -40,6 +40,25 @@ model User {
   UserProfileComment UserProfileComment[] @relation("UserProfileComments")
   UserLibrary        UserLibrary[]
   UserReadHistory    UserReadHistory[]
+
+  // Relação de seguidores e seguindo
+  following Follower[] @relation("Following")
+  followers Follower[] @relation("Followers")
+}
+
+model Follower {
+  id           String   @id @default(uuid())
+  followerId   String
+  followingId  String
+  createdAt    DateTime @default(now())
+
+  // Relacionamento com o usuário que está seguindo
+  follower     User     @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+
+  // Relacionamento com o usuário que está sendo seguido
+  following    User     @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId]) // Evita duplicidade de seguimento entre os mesmos usuários
 }
 
 enum userRole {
@@ -315,8 +334,20 @@ model ThreadPost {
   threadId String
   thread   Thread @relation(fields: [threadId], references: [id])
 
-  // Citação de outro post
-  quotedPostId String?
-  quotedPost   ThreadPost?  @relation("PostCitation", fields: [quotedPostId], references: [id])
-  citingPosts  ThreadPost[] @relation("PostCitation") // Posts que citam este post
+  // Relação com a tabela intermediária de citações
+  citedPosts  PostCitation[] @relation("CitedPosts")
+  citingPosts PostCitation[] @relation("CitingPosts")
+}
+
+model PostCitation {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  // Relacionamento com o post que faz a citação
+  citingPostId String
+  citingPost   ThreadPost @relation("CitingPosts", fields: [citingPostId], references: [id])
+
+  // Relacionamento com o post que está sendo citado
+  citedPostId String
+  citedPost   ThreadPost @relation("CitedPosts", fields: [citedPostId], references: [id])
 }

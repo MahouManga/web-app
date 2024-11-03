@@ -128,3 +128,26 @@ export const getForumByID = async (id: number) => {
 
     return forum;
 }
+
+export async function getUserForumPosts(userId: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+
+    const posts = await prisma.threadPost.findMany({
+        where: { userId },
+        skip,
+        take: limit,
+        include: {
+            user: true,   // Inclui informações do autor do post
+            thread: true, // Inclui informações da thread associada
+            citedPosts: true, // Inclui as postagens que este post cita
+        },
+    });
+
+    const totalPosts = await prisma.threadPost.count({ where: { userId } });
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    return {
+        posts,
+        totalPages,
+    };
+}

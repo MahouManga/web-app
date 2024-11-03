@@ -78,7 +78,7 @@ export default function BottomBar({ user, topic }: any) {
             </div>
             {showPreview ?
               <div
-                className="mt-4 topic-post border rounded p-4"
+                className="mt-4 topic-post border rounded p-4 topic-post"
                 dangerouslySetInnerHTML={{ __html: content }}
               />
               : <div className="">

@@ -39,7 +39,7 @@ export default function ReadingListClient({ series, type }: ReadingListClientPro
   });
 
   return (
-    <div>
+    <div className=''>
       <div className="flex">
         {/* Sidebar */}
         <aside className="w-64 bg-base-200 p-4 rounded-lg shadow-md mr-6">

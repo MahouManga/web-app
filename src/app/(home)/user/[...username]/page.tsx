@@ -4,8 +4,11 @@ import Overview from "./overview";
 import { validateRequest } from "@/lib/auth";
 import { getUserByUsername } from "@/services/userService";
 import ReadingList from "./readingList";
+import CommentsPage from "./comments";
+import ForumPostsPage from "./forumPosts";
+import SocialPage from "./social/social";
 
-export default async function Page({ params }: { params: Params }) {
+export default async function Page({ params, searchParams }: { params: Params, searchParams: any }) {
 
     const { username } = params;
     const user = await getUserByUsername(username[0]);
@@ -16,10 +19,10 @@ export default async function Page({ params }: { params: Params }) {
         { name: 'Overview', url: '', href: '/', component: <Overview user={user} /> },
         { name: 'Novel List', url: 'novellist', href: '/novellist', component: <ReadingList user={user} type='NOVEL' /> },
         { name: 'Manga List', url: 'mangalist', href: '/mangalist', component: <ReadingList user={user} type='MANGA'/> },
-        { name: 'Stats', url: 'stats', href: '/stats' },
-        { name: 'Social', url: 'social', href: '/social' },
-        { name: 'Reviews', url: 'reviews', href: '/reviews' },
-        { name: 'Submissions', url: 'submissions', href: '/submissions' },
+        { name: 'Comentários', url: 'comments', href: '/comments', component: <CommentsPage user={user} searchParams={searchParams} /> },
+        { name: 'Threads', url: 'threads', href: '/threads', component: <ForumPostsPage user={user} searchParams={searchParams} /> },
+        { name: 'Social', url: 'social', href: '/social', component: <SocialPage user={user} searchParams={searchParams} /> },
+        { name: 'Envios', url: 'envios', href: '/envios' },
     ];
 
     // Função para encontrar o componente correspondente com base na URL
@@ -31,7 +34,7 @@ export default async function Page({ params }: { params: Params }) {
     return (
         <>
             <ProfilePage user={user} selectedTab={selectedTab} tabs={tabs} />
-            <div className='flex w-full justify-center bg-base-300'>
+            <div className='flex w-full justify-center'>
             <div className='flex container max-w-5xl p-2 h-screen'>
                 {renderTabComponent()}
             </div>
