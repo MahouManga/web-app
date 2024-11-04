@@ -19,11 +19,16 @@ const formats = [
   "color", "code-block"
 ];
 
-export default function BottomBar({ user, topic }: any) {
+export default function BottomBar({ user, topic, quotedPosts, setQuotedPosts }: any) {
   const router = useRouter();
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [content, setContent] = useState('');
+
+  // Função para remover uma citação
+  const removeQuotedPost = (postId: string) => {
+    setQuotedPosts(quotedPosts.filter((post: any) => post.id !== postId));
+  };
 
   const toggleReplyBox = () => {
     setShowReplyBox(!showReplyBox);
@@ -40,6 +45,7 @@ export default function BottomBar({ user, topic }: any) {
           threadId: topic.id,
           userId: user.id,
           content,
+          citedPosts: quotedPosts
         })
       });
 
@@ -65,6 +71,24 @@ export default function BottomBar({ user, topic }: any) {
       {showReplyBox && (
         <div className="fixed flex bottom-16 left-0 right-0 justify-center z-50 p-4">
           <div className="bg-primary-content p-4 shadow-lg rounded-xl w-full max-w-6xl space-y-3">
+          {quotedPosts.length > 0 && (
+                <div className="mb-4 max-h-40 overflow-y-auto space-y-2 border rounded p-2">
+                    <h4 className="font-bold mb-2">Mensagens citadas:</h4>
+                    {quotedPosts.map((post: any) => (
+                        <div key={post.id} className="border p-2 mb-2 rounded">
+                            <p><strong>{post.user.name} disse:</strong></p>
+                            <div className="line-clamp-3 topic-post" 
+                            dangerouslySetInnerHTML={{ __html: post.content }} />
+                            <button
+                                className="btn btn-xs btn-error mt-2"
+                                onClick={() => removeQuotedPost(post.id)}
+                            >
+                                Remover citação
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
             <div className="flex justify-between items-center">
               <h1 className='text-xl'>Enviar Resposta</h1>
               <div className='space-x-3'>

@@ -44,19 +44,20 @@ model User {
   // Relação de seguidores e seguindo
   following Follower[] @relation("Following")
   followers Follower[] @relation("Followers")
+  Report    Report[]
 }
 
 model Follower {
-  id           String   @id @default(uuid())
-  followerId   String
-  followingId  String
-  createdAt    DateTime @default(now())
+  id          String   @id @default(uuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
 
   // Relacionamento com o usuário que está seguindo
-  follower     User     @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  follower User @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
 
   // Relacionamento com o usuário que está sendo seguido
-  following    User     @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+  following User @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId]) // Evita duplicidade de seguimento entre os mesmos usuários
 }
@@ -167,6 +168,7 @@ model Chapter {
   content         ChapterContent?
   UserReadHistory UserReadHistory[]
   Comments        Comments[]
+  Report          Report[]
 }
 
 model ChapterContent {
@@ -248,6 +250,7 @@ model Comments {
   // Reações ao comentário
   CommentReactions   CommentReactions[]
   UserProfileComment UserProfileComment[]
+  Report             Report[]
 }
 
 model UserProfileComment {
@@ -275,6 +278,31 @@ model CommentReactions {
 enum ReactionType {
   LIKE
   DISLIKE
+}
+
+model Report {
+  id        String   @id @default(uuid())
+  reason    String
+  details   String?
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamento com User
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  // Relacionamento com ThreadPost
+  postId String?
+  post   ThreadPost? @relation(fields: [postId], references: [id])
+
+  //Relacionamento com Comments
+  commentId String?
+  comment   Comments? @relation(fields: [commentId], references: [id])
+
+  // Relacionamento com Chapters
+  chapterId String?
+  chapter   Chapter? @relation(fields: [chapterId], references: [id])
 }
 
 // F O R U M //
@@ -337,6 +365,7 @@ model ThreadPost {
   // Relação com a tabela intermediária de citações
   citedPosts  PostCitation[] @relation("CitedPosts")
   citingPosts PostCitation[] @relation("CitingPosts")
+  Report      Report[]
 }
 
 model PostCitation {

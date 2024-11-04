@@ -1,9 +1,10 @@
 import { createPost, updatePost } from '@/services/threadService';
 import { NextResponse } from 'next/server';
 
+
 export async function POST(request: Request) {
     try {
-        const { threadId, userId, content } = await request.json();
+        const { threadId, userId, content, citedPosts } = await request.json();
 
         console.log(threadId, userId, content)
 
@@ -11,7 +12,9 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Campos obrigatórios faltando!' }, { status: 400 });
         }
 
-        const post = await createPost(threadId, userId, content);
+        console.log(citedPosts)
+
+        const post = await createPost(threadId, userId, content, citedPosts || []);
         return NextResponse.json(post, { status: 201 });
     } catch (error) {
         console.log(error)

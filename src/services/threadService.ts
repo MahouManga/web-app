@@ -33,6 +33,15 @@ export function getTopicByID(threadId: string) {
             posts: {
                 include: {
                     user: true,
+                    citingPosts: {
+                        include: {
+                            citedPost: {
+                                include: {
+                                    user: true,
+                                },
+                            },
+                        },
+                    },
                 },
                 orderBy: {
                     createdAt: 'asc',
@@ -43,21 +52,28 @@ export function getTopicByID(threadId: string) {
     });
 }
 
-export function createPost(threadId: string, userId: string, content: string, citingPostId?: string[]) {
-    return prisma.threadPost.create({
+
+export async function createPost(threadId: string, userId: string, content: string, citedPosts?: { id: string }[]) {
+    // Criar o post principal
+    const post = await prisma.threadPost.create({
         data: {
             threadId,
             content,
             userId,
-            ...(citingPostId && citingPostId.length > 0
-                ? {
-                    citingPosts: {
-                        connect: citingPostId.map(id => ({ id }))
-                    }
-                }
-                : {}),
         },
     });
+
+    // Se houver posts citados, criar registros na tabela PostCitation
+    if (citedPosts && citedPosts.length > 0) {
+        await prisma.postCitation.createMany({
+            data: citedPosts.map((citedPost) => ({
+                citingPostId: post.id,    // O novo post que está fazendo a citação
+                citedPostId: citedPost.id // O ID do post que está sendo citado
+            })),
+        });
+    }
+
+    return post;
 }
 
 export function updatePost(
