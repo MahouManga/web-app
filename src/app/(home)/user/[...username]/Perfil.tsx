@@ -5,7 +5,35 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-export default function ProfilePage({ user, tabs, selectedTab }: any) {
+export default function ProfilePage({ user, tabs, selectedTab, userLogged, isFollow }: any) {
+    const [isFollowing, setIsFollowing] = useState(isFollow);
+
+    const handleFollowToggle = async () => {
+        try {
+            const response = await fetch('/api/user/follow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: userLogged.id,
+                    followId: user.id,
+                    follow: isFollowing,
+                }),
+            });
+
+            if (response.ok) {
+                // Suponha que a resposta da API indique o novo status de "Seguindo"
+                const result = await response.json();
+                setIsFollowing(!isFollowing);
+            } else {
+                console.error("Erro ao seguir/desseguir o usuário.");
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+        }
+    };
+
     return (
         <div className="bg-gray-100">
             {/* Banner */}
@@ -25,28 +53,22 @@ export default function ProfilePage({ user, tabs, selectedTab }: any) {
                                 className="object-cover"
                             />
                         </div>
-                        <h1 className="mb-6 mr-6 ml-6 text-white text-xl md:text-2xl font-medium">HarryKaray</h1>
+                        <h1 className="mb-6 mr-6 ml-6 text-white text-xl md:text-2xl font-medium">{user.name}
+                            <span className='text-sm opacity-80 ml-4'>@{user.username}</span></h1>
                     </div>
-                    <div className='flex text-white md:gap-10 gap-5 pb-4 pr-4 text-center'>
-                        <div className='flex gap-3'>
-                            <p>0</p>
-                            <h3>Publicações</h3>
-                        </div>
-                        <div className='flex gap-3'>
-                            <p>0</p>
-                            <h3>Seguidores</h3>
-                        </div>
-                        <div className='flex gap-3'>
-                            <p>0</p>
-                            <h3>Seguindo</h3>
-                        </div>
-                    </div>
+
+                    {userLogged && user && user.id !== userLogged.id &&
+                        <div className='flex text-white md:gap-10 gap-5 pb-4 pr-4 mr-6 text-center'>
+                            <button className='btn btn-outline' onClick={() => handleFollowToggle()}>
+                                {isFollowing ? 'Seguindo' : 'Seguir'}
+                            </button>
+                        </div>}
                 </div>
             </div>
 
             {/* Navigation Tabs */}
             <div className="flex justify-center border-b bg-base-100">
-                {tabs.map((tab:any) => (
+                {tabs.map((tab: any) => (
                     <a
                         key={tab.name}
                         href={`/user/${user.username}/${tab.href}`}

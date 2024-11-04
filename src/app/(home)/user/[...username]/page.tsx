@@ -7,18 +7,25 @@ import ReadingList from "./readingList";
 import CommentsPage from "./comments";
 import ForumPostsPage from "./forumPosts";
 import SocialPage from "./social/social";
+import { isFollowing } from "@/services/socialService";
 
 export default async function Page({ params, searchParams }: { params: Params, searchParams: any }) {
 
     const { username } = params;
     const user = await getUserByUsername(username[0]);
+    if (!user) {
+        return (<div>User not found</div>)
+    }
+    const { user: userLogged } = await validateRequest();
+
+    let isFollow = user && userLogged && await isFollowing(userLogged.id, user.id);
 
     const tabNavigate = username[1] ?? 'overview';
 
     const tabs = [
         { name: 'Overview', url: '', href: '/', component: <Overview user={user} /> },
         { name: 'Novel List', url: 'novellist', href: '/novellist', component: <ReadingList user={user} type='NOVEL' /> },
-        { name: 'Manga List', url: 'mangalist', href: '/mangalist', component: <ReadingList user={user} type='MANGA'/> },
+        { name: 'Manga List', url: 'mangalist', href: '/mangalist', component: <ReadingList user={user} type='MANGA' /> },
         { name: 'Comentários', url: 'comments', href: '/comments', component: <CommentsPage user={user} searchParams={searchParams} /> },
         { name: 'Threads', url: 'threads', href: '/threads', component: <ForumPostsPage user={user} searchParams={searchParams} /> },
         { name: 'Social', url: 'social', href: '/social', component: <SocialPage user={user} searchParams={searchParams} /> },
@@ -33,11 +40,11 @@ export default async function Page({ params, searchParams }: { params: Params, s
 
     return (
         <>
-            <ProfilePage user={user} selectedTab={selectedTab} tabs={tabs} />
+            <ProfilePage user={user} selectedTab={selectedTab} tabs={tabs} userLogged={userLogged} isFollow={isFollow} />
             <div className='flex w-full justify-center'>
-            <div className='flex container max-w-5xl p-2 h-screen'>
-                {renderTabComponent()}
-            </div>
+                <div className='flex container max-w-5xl p-2 h-screen'>
+                    {renderTabComponent()}
+                </div>
             </div>
         </>
     );

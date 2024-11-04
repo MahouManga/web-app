@@ -10,8 +10,9 @@ export default async function SocialPage({ user, searchParams }: { user: any, se
     const following = tab === "following" ? await getFollowing(user.id) : [];
     const followers = tab === "followers" ? await getFollowers(user.id) : [];
 
+
     return (
-        <div className="flex">
+        <div className="flex space-x-8">
             {/* Menu Lateral */}
             <div className="w-1/4 p-4 bg-base-100">
                 <h2 className="text-lg font-bold mb-4">Social</h2>
