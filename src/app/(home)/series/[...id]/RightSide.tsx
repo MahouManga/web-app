@@ -95,8 +95,9 @@ export default function RightSide({ serie, chapters, user, readed }: { serie: Se
               <div className='mt-2'>
                 <p>Você pode clicar em uma categoria ou tag para pesquisar por ela.</p>
                 <div className='flex flex-wrap my-3'>
-                  {serie.genres?.map((genre) => (
-                    <a className='btn btn-secondary text-secondary-content mr-5 mt-2' href='#' rel='tag'>{genre.name}</a>
+                  {serie.genres?.map((genre, index) => (
+                    <a key={index}
+                    className='btn btn-secondary text-secondary-content mr-5 mt-2' href='#' rel='tag'>{genre.name}</a>
                   ))}
                 </div>
                 <div className="bg-base-content/10 mx-1 my-8 h-px"></div>

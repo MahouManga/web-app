@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { FaComment, FaExclamationTriangle } from "react-icons/fa";
 
-const ForumPost = ({ author, content, time, isTopicAuthor, joinDate, postCount }) => {
+const ForumPost = ({ author, content, time, isTopicAuthor, joinDate, postCount }:any) => {
   return (
     <div className="mb-4 p-4 bg-base-200 rounded-lg group">
       <div className="flex items-start mb-2">

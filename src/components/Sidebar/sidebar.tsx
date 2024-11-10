@@ -4,6 +4,7 @@ import { useState } from "react"
 import { IoBarChart, IoPeople , IoBook, IoPricetagSharp, IoBookmarks, IoAddCircle, IoWarningSharp   } from "react-icons/io5";
 import SidebarHeader from "./header";
 import { Toaster } from "sonner";
+import Image from "next/image";
 
 export default function SidebarBase({ children, user }: { children: React.ReactNode, user: any }) {
     const Menus = [
@@ -21,16 +22,18 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
         <div className="flex text-base-content bg-base-300">
             <div className={` ${open ? "w-64" : "w-20 "} fixed flex flex-col bg-base-300 h-screen p-5 pt-8 duration-300 justify-between`}>
                 <div className='z-10'>
-                    <img
+                    <Image
                         src="/favicon.ico"
                         className={`absolute cursor-pointer -right-3 top-5 w-7 border-dark-purple
                         border-2 rounded-full  ${!open && "rotate-180"}`}
+                        alt="logo"
                         onClick={() => setOpen(!open)}
                     />
                     <div>
                         <Link className="flex gap-x-4 items-center" href="/">
-                            <img
+                            <Image
                                 src="/favicon.ico"
+                                alt="logo"
                                 className={`w-9 h-9 cursor-pointer duration-500 ${open && "rotate-[360deg]"
                                     }`}
                             />

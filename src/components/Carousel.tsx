@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
 
 export default function Carousel({
@@ -19,8 +19,9 @@ export default function Carousel({
 
   const prev = () =>
     setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1));
-  const next = () =>
+  const next = useCallback(() => {
     setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1));
+  }, [slides.length]);
 
   useEffect(() => {
     if (!autoSlide) return;
@@ -93,7 +94,7 @@ export default function Carousel({
                 <div className="flex flex-col justify-center text-white">
                   <h1 className="text-3xl font-bold line-clamp-1">{serie.title}</h1>
                   <div className="flex-wrap hidden sm:block md:flex my-3">
-                    {serie.genres?.map((item:any, index:any) => (
+                    {serie.genres?.map((item: any, index: any) => (
                       <a
                         key={index}
                         className="btn mr-5 mt-2"

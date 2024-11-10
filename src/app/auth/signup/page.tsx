@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { signup } from './actions';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Page() {
   const [error, setError] = useState<any>(null);
@@ -28,10 +29,12 @@ export default function Page() {
           </div>
           {/* Logo */}
           <a href="/" className="flex justify-center items-center mb-6 text-2xl font-semibold">
-            <img
+            <Image
               className="w-8 h-8 mr-2"
               src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
               alt="logo"
+              width={32}
+              height={32}
             />
             Mahou
           </a>
@@ -139,10 +142,12 @@ export default function Page() {
       {/* Right Side */}
       <div className="w-1/2 bg-neutral-content flex justify-center items-center">
         <div className="flex flex-col justify-center items-center space-y-4">
-          <img
+          <Image
             src="/images/parrot.png"
             alt="Mascote Teachy"
             className="w-56 h-56"
+            width={100}
+            height={100}
           />
           <div className="flex space-x-4 p-4 bg-white shadow rounded-lg">
             <i className="icon icon-star"></i>

@@ -15,7 +15,7 @@ export default function TopicoPage() {
     alert('Tópico publicado com sucesso!');
   };
 
-  const execCommand = (command) => {
+  const execCommand = (command:any) => {
     document.execCommand(command);
   };
 

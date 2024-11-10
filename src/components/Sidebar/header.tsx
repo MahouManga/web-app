@@ -47,7 +47,7 @@ const SidebarHeader = ({user}: {user: any}) => {
             <ThemeSwitch/>
             {user && <div className="flex flex-row space-x-4">
                     <div tabIndex={0} role="button" className="w-16 rounded-full avatar">
-                        <img
+                        <Image
                             className='rounded-full'
                             alt="Avatar"
                             src="/noAvatar.png" />

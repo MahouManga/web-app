@@ -107,7 +107,7 @@ function ChaptersDrawer({ serie, chapter }: any) {
             }
         }
         fetchChapters();
-    }, [chapter]);
+    }, [chapter, serie.id]);
 
 
     useEffect(() => {

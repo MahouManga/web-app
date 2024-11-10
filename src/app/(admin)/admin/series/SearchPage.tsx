@@ -33,7 +33,7 @@ export default function SearchPage({ genres }: { genres: Genre[] }) {
                     status: query.status,
                     genre: query.genre,
                 });
-
+    
                 const res = await fetch(`/api/series?${params.toString()}`);
                 const result = await res.json();
                 setData(result.data || []);
@@ -43,9 +43,10 @@ export default function SearchPage({ genres }: { genres: Genre[] }) {
                 setIsLoading(false);
             }
         }
-
+    
         fetchData();
-    }, [searchParams]);
+    }, [query.searchQuery, query.orderBy, query.sort, query.status, query.genre]);
+    
 
     return (
         <main className="mx-auto">

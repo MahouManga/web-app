@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import React, { useState } from 'react';
 import { FiRefreshCcw } from 'react-icons/fi';
 
@@ -66,23 +67,34 @@ const ProfilePage = () => {
         {/* Profile Section */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-10">
           <div className="relative flex flex-col items-center">
-            <img
+            <Image
               src={profileImage}
               alt="User Avatar"
+              width={1920}
+              height={1080}
               className="w-32 h-32 shadow-lg mb-4"
             />
-            <button className="absolute bottom-0 right-0 btn btn-circle btn-sm bg-base-100 shadow-md" onClick={() => document.getElementById('profileImageInput').click()}>
+            <button
+              className="absolute bottom-0 right-0 btn btn-circle btn-sm bg-base-100 shadow-md"
+              onClick={() => (document.getElementById('profileImageInput') as HTMLInputElement).click()}
+            >
               <FiRefreshCcw className="text-primary" />
             </button>
+
             <input type="file" id="profileImageInput" accept="image/*" onChange={handleProfileImageChange} className="hidden" />
           </div>
           <div className="relative flex flex-col items-center w-full">
-            <img
+            <Image
               src={bannerImage}
               alt="Banner"
+              width={1920}
+              height={400}
               className="w-full h-32 object-cover shadow-lg mb-4"
             />
-            <button className="absolute bottom-0 right-0 btn btn-circle btn-sm bg-base-100 shadow-md" onClick={() => document.getElementById('bannerImageInput').click()}>
+            <button
+              className="absolute bottom-0 right-0 btn btn-circle btn-sm bg-base-100 shadow-md"
+              onClick={() => (document.getElementById('bannerImageInput') as HTMLInputElement).click()}
+            >
               <FiRefreshCcw className="text-primary" />
             </button>
             <input type="file" id="bannerImageInput" accept="image/*" onChange={handleBannerImageChange} className="hidden" />
@@ -160,30 +172,30 @@ const ProfilePage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-              {/* Notifications Section */}
-                <div className="form-control">
-                  <label className="label cursor-pointer text-base-content">
-                    <span className="label-text font-semibold">Receber Notificações</span>
+            {/* Notifications Section */}
+            <div className="form-control">
+              <label className="label cursor-pointer text-base-content">
+                <span className="label-text font-semibold">Receber Notificações</span>
                 <input
                   type="checkbox"
                   className="toggle toggle-primary ml-4"
                   checked={notificationsEnabled}
                   onChange={() => setNotificationsEnabled(!notificationsEnabled)}
                 />
-                  </label>
-                </div>
+              </label>
+            </div>
 
-              {/* Privacy Section */}
-                <div className="form-control">
-                  <label className="label cursor-pointer text-base-content">
-                    <span className="label-text font-semibold">Privacidade</span>
+            {/* Privacy Section */}
+            <div className="form-control">
+              <label className="label cursor-pointer text-base-content">
+                <span className="label-text font-semibold">Privacidade</span>
                 <input
                   type="checkbox"
                   className="toggle toggle-secondary ml-4"
                   checked={privacyEnabled}
                   onChange={() => setPrivacyEnabled(!privacyEnabled)}
                 />
-                  </label>
+              </label>
             </div>
           </div>
         </div>

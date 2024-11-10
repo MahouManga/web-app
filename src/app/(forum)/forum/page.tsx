@@ -1,13 +1,11 @@
 // src/app/forum/page.tsx
 import ForumComponent from '@/components/Forum/ForumComponent';
 import { getCategorys } from '@/services/forumService';
-import Link from 'next/link';
-import { FaAngleRight } from 'react-icons/fa';
 
 export default async function ForumHome() {
-  const categories = await getCategorys();
+  const categories = await getCategorys() || [];
 
-  if (!categories) {
+  if (!categories || !Array.isArray(categories)) {
     return <p>No categories found.</p>;
   }
 

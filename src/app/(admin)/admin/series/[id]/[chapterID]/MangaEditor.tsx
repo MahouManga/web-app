@@ -6,6 +6,7 @@ import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } 
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface ImageItem {
     id: string;
@@ -38,9 +39,11 @@ const SortableItem = ({ id, src, imageURL, isUploaded, onRemove, index }: ImageI
             <span className="absolute top-0 left-0 bg-black text-white text-xs px-1 rounded">
                 {index + 1}
             </span>
-            <img
+            <Image
                 src={imageURL ?? src}
                 alt={`Image ${id}`}
+                width={96}
+                height={100}
                 className={`w-24 h-100 object-cover ${isUploaded ? 'border-2 border-green-500' : 'border-2 border-blue-500'}`}
             />
         </div>
@@ -258,7 +261,7 @@ export default function MangaEditor({ serie, chapter, formData, chapterID, edito
                 <div>
                     <div {...getZipRootProps()} className="border-2 border-dashed border-gray-500 p-5 cursor-pointer">
                         <input {...getZipInputProps()} />
-                        <p>Drag 'n' drop a ZIP file here, or click to select one</p>
+                        <p>Drag &apos;n&apos; drop a ZIP file here, or click to select one</p>
                     </div>
                     {zipFile && <p>Selected file: {zipFile.name} ({(zipFile.size / (1024 * 1024)).toFixed(2)} MB)</p>}
                 </div>
@@ -268,7 +271,7 @@ export default function MangaEditor({ serie, chapter, formData, chapterID, edito
                 <>
                     <div {...getImagesRootProps()} className="border-2 border-dashed border-gray-500 p-5 cursor-pointer">
                         <input {...getImagesInputProps()} />
-                        <p>Drag 'n' drop images here, or click to select files</p>
+                        <p>Drag &apos;n&apos; drop images here, or click to select files</p>
                     </div>
                     <p className="mt-2">Total size of images: {calculateTotalSize(images.map(image => image.file!).filter(file => file !== undefined))} MB</p>
                     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>

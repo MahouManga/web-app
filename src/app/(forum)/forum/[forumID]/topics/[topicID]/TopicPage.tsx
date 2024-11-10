@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import moment from "moment";
 import "moment/locale/pt-br";
+import Image from "next/image";
 moment.locale("pt-br");
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: true });
 
@@ -145,7 +146,9 @@ export default function TopicPage({ topic, forum, user }: any) {
                         {/* Informações do Usuário à Esquerda */}
                         <div className="flex flex-row justify-between lg:w-1/6 lg:flex-col items-center bg-base-100 border border-base-200 p-4">
                             <div className='flex flex-row lg:flex-col items-center lg:space-x-0 space-x-5 justify-center mb-0 lg:mb-4'>
-                                <img
+                                <Image
+                                    width={64}
+                                    height={64}
                                     src={`/noImage.jpg`}
                                     alt={`Avatar de ${post.user.name}`}
                                     className="w-16 h-16 rounded-full mb-4"
@@ -204,8 +207,10 @@ export default function TopicPage({ topic, forum, user }: any) {
                                     {post.citingPosts.map((citation: any) => (
                                         <div key={citation.citedPost.id} className="border-l-4 border-info pl-4 bg-base-200 rounded-lg">
                                             <div className="flex items-center space-x-2">
-                                                <img
+                                                <Image
                                                     src={`/noImage.jpg`}
+                                                    width={32}
+                                                    height={32}
                                                     alt={`Avatar de ${citation.citedPost.user.name}`}
                                                     className="w-8 h-8 rounded-full"
                                                 />

@@ -16,7 +16,7 @@ export default function TopicoPage() {
   };
 
 
-  const execCommand = (command) => {
+  const execCommand = (command:any) => {
     document.execCommand(command);
   };
 

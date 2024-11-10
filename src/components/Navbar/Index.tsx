@@ -63,7 +63,7 @@ export default async function NavBar() {
                         {
                             menu.map((item, index) => (
                                 item.children ?
-                                    <li>
+                                    <li key={index}>
                                         <details>
                                             <summary>{item.title}</summary>
                                             <ul className="p-2">

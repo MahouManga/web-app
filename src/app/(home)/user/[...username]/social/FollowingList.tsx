@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function FollowingList({ following }: any) {
@@ -12,7 +13,8 @@ export default function FollowingList({ following }: any) {
                                 <div className="flex items-center">
                                     <div className="avatar">
                                         <div className="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                                            <img src={following.image || "/noImage.jpg"} alt={following.name} />
+                                            <Image width={64} height={64}
+                                            src={following.image || "/noImage.jpg"} alt={following.name} />
                                         </div>
                                     </div>
                                     <div className="ml-4">

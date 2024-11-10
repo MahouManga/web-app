@@ -45,7 +45,7 @@ export default function SearchPage({ genres }: { genres: Genre[] }) {
         }
 
         fetchData();
-    }, [searchParams]);
+    }, [query.genre, query.orderBy, query.searchQuery, query.sort, query.status]);
 
     return (
         <main className="mx-auto">

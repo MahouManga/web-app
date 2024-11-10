@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import { MdThumbUp, MdThumbDown } from 'react-icons/md';
 
@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Image from 'next/image';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const formats = [
@@ -47,7 +48,7 @@ function SenderComponent({ parentId, handleAddReply }: any) {
 export default function CommentsSection({ itemId, user, type }: any) {
   const router = useRouter();
   const [comments, setComments] = useState<any[]>([]);
-  const [collapsedComments, setCollapsedComments] = useState({});
+  const [collapsedComments, setCollapsedComments] = useState<{ [key: string]: boolean }>({});
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
@@ -57,24 +58,24 @@ export default function CommentsSection({ itemId, user, type }: any) {
   const COMMENTS_PER_PAGE = 20;
 
   // Função para buscar comentários
-  const fetchComments = async (currentPage: number, append = false) => {
+  const fetchComments = useCallback(async (currentPage: number, append = false) => {
     try {
       if (currentPage === 1) {
         setLoading(true);
       } else {
         setLoadingMore(true);
       }
-
+  
       const response = await fetch(`/api/comments?itemId=${itemId}&type=${type}&page=${currentPage}&limit=${COMMENTS_PER_PAGE}`);
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         if (data.comments.length < COMMENTS_PER_PAGE) {
           setHasMore(false);
         }
-
+  
         if (append) {
-          setComments(prevComments => [...prevComments, ...data.comments]);
+          setComments((prevComments) => [...prevComments, ...data.comments]);
         } else {
           setComments(data.comments);
         }
@@ -90,12 +91,12 @@ export default function CommentsSection({ itemId, user, type }: any) {
         setLoadingMore(false);
       }
     }
-  };
-
+  }, [itemId, type]);
+  
   // useEffect para carregar comentários na montagem do componente
   useEffect(() => {
     fetchComments(1);
-  }, [itemId, type]);
+  }, [fetchComments]);
 
   const handleAddReply = async (parentId: string | null, content: string) => {
     try {
@@ -152,7 +153,7 @@ export default function CommentsSection({ itemId, user, type }: any) {
           className={`flex items-start space-x-4 mb-4 ml-${level * 4}`}
         >
           <div className="flex items-start w-full">
-            <img
+            <Image
               src={reply.user.image || "/noImage.jpg"}
               alt="Avatar"
               className={`w-${level === 1 ? 10 : 8} h-${level === 1 ? 10 : 8} rounded-full`}
@@ -220,7 +221,7 @@ export default function CommentsSection({ itemId, user, type }: any) {
           <div key={comment.id} className="mb-6">
             <div className="flex items-start space-x-4">
               <div className="flex items-start w-full">
-                <img
+                <Image
                   src={comment.user.image || "/noImage.jpg"}
                   alt="Avatar"
                   className="w-10 h-10 rounded-full"

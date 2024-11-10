@@ -1,14 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createMangaChapter, createNovelChapter, updateMangaChapter } from '@/services/chapterService';
 
-export const config = {
-    api: {
-      bodyParser: {
-        sizeLimit: '10mb', // Aumente conforme necessário
-      },
-    },
-};
-
 export async function POST(request: Request) {
     try {
         const body = await request.json();

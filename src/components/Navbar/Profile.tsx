@@ -1,8 +1,8 @@
 'use server';
 import { validateRequest, logout } from "@/lib/auth";
-import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
-export default async function () {
+export default async function Profile () {
     const { user } = await validateRequest();
     return (
         user ? <div className="dropdown dropdown-end">
@@ -14,7 +14,7 @@ export default async function () {
                     <span className="block text-xs">{user.username}</span>
                 </span>
                 <div tabIndex={0} role="button" className="w-10 rounded-full avatar">
-                    <img
+                    <Image
                         className='rounded-full'
                         alt="Avatar"
                         src="/noAvatar.png" />

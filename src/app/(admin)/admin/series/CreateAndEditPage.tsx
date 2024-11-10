@@ -6,6 +6,7 @@ import { IoAdd } from "react-icons/io5";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { getStatusText } from "@/utils/projectStatus";
+import Image from "next/image";
 
 const mediaTypes = Object.keys(SerieType).map((key) => ({
     value: key,
@@ -234,7 +235,7 @@ export default function Form({ serie, genres }: { serie?: any, genres: any }) {
                                 onChange={handleChange}
                             />
                             {previewImages.poster && (
-                                <img src={previewImages.poster} alt="Poster Preview" className="mt-2 max-h-70 object-contain" />
+                                <Image src={previewImages.poster} alt="Poster Preview" width={200} height={300} className="mt-2 max-h-70 object-contain" />
                             )}
                         </div>
                         <div className="form-control mb-4">
@@ -249,7 +250,7 @@ export default function Form({ serie, genres }: { serie?: any, genres: any }) {
                                 onChange={handleChange}
                             />
                             {previewImages.cover && (
-                                <img src={previewImages.cover} alt="Cover Preview" className="mt-2 max-h-70 object-contain" />
+                                <Image src={previewImages.cover} width={300} height={300} alt="Cover Preview" className="mt-2 max-h-70 object-contain" />
                             )}
                         </div>
 
