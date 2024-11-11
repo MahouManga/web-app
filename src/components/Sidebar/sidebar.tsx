@@ -27,6 +27,8 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                         className={`absolute cursor-pointer -right-3 top-5 w-7 border-dark-purple
                         border-2 rounded-full  ${!open && "rotate-180"}`}
                         alt="logo"
+                        width={40}
+                        height={40}
                         onClick={() => setOpen(!open)}
                     />
                     <div>
@@ -34,6 +36,8 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                             <Image
                                 src="/favicon.ico"
                                 alt="logo"
+                                width={40}
+                                height={40}
                                 className={`w-9 h-9 cursor-pointer duration-500 ${open && "rotate-[360deg]"
                                     }`}
                             />

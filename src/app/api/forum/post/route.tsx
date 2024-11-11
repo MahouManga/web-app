@@ -1,13 +1,11 @@
-import { createPost, updatePost } from '@/services/threadService';
+import { createPost, createTopic, updatePost } from '@/services/threadService';
 import { NextResponse } from 'next/server';
 
 
 export async function POST(request: Request) {
     try {
         const { threadId, userId, content, citedPosts } = await request.json();
-
-        console.log(threadId, userId, content)
-
+        
         if (!threadId || !content || !userId) {
             return NextResponse.json({ error: 'Campos obrigatórios faltando!' }, { status: 400 });
         }

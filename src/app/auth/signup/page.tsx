@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { signup } from './actions';
 import Link from 'next/link';
 import Image from 'next/image';
+import prisma from '@/lib/db';
 
 export default function Page() {
   const [error, setError] = useState<any>(null);

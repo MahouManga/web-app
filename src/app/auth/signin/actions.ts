@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { lucia } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ActionResult } from "next/dist/server/app-render/types";
+import prisma from "@/lib/db";
 
 export async function login(_: any, formData: FormData): Promise<ActionResult> {
 	const identifier = formData.get("identifier"); // Pode ser username ou e-mail

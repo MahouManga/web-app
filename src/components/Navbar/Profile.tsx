@@ -17,6 +17,8 @@ export default async function Profile () {
                     <Image
                         className='rounded-full'
                         alt="Avatar"
+                        width={40}
+                        height={40}
                         src="/noAvatar.png" />
                 </div>
             </div>

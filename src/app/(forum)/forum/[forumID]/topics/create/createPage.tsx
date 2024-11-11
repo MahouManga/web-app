@@ -23,7 +23,7 @@ export default function CreatePage({ forum, user }: { forum: any, user: any }) {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('/api/forum/post', {
+      const response = await fetch('/api/forum/topics', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -55,7 +55,7 @@ export default function CreatePage({ forum, user }: { forum: any, user: any }) {
       <div className="bg-base-300 p-6 rounded-lg space-y-4">
         <div>
           <nav className="text-sm text-base-content mb-4">
-            <Link href="/forum" className="hover:underline">Mahou Reader Fóruns</Link> <span className="mx-1"><span className="mx-1">&rsaquo;</span></span> 
+            <Link href="/forum" className="hover:underline">Mahou Reader Fóruns</Link> <span className="mx-1"><span className="mx-1">&rsaquo;</span></span>
             <Link href={`/forum/${forum.id}`} className="hover:underline">{forum.title}</Link>
           </nav>
         </div>
@@ -74,20 +74,26 @@ export default function CreatePage({ forum, user }: { forum: any, user: any }) {
             onChange={(e) => setTitle(e.target.value)}
             className="input input-bordered w-full text-lg text-base-content bg-base-200 placeholder-neutral-content focus:outline-none focus:ring focus:ring-primary border-b border-neutral-content mb-2"
           />
-          <div>
-            <div className="">
-              <ReactQuill
-                id="content"
-                value={content}
-                onChange={setContent}
-                className="bg-white text-black h-70 overflow-y-auto"
-                theme="snow"
-                modules={modules('t2')}
-                formats={formats}
-              />
-            </div>
-            <EditorToolbar toolbarId={'t2'} />
-          </div>
+          {preview ?
+            <div
+              className="mt-4 topic-post border rounded p-4 topic-post"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+            : (
+              <div>
+                <div className="">
+                  <ReactQuill
+                    id="content"
+                    value={content}
+                    onChange={setContent}
+                    className="bg-white text-black h-70 overflow-y-auto"
+                    theme="snow"
+                    modules={modules('t2')}
+                    formats={formats}
+                  />
+                </div>
+                <EditorToolbar toolbarId={'t2'} />
+              </div>)}
         </div>
         <div className='flex w-full justify-end'>
           <button className="btn btn-primary font-bold" onClick={() => handleSubmit()}>Publicar</button>
