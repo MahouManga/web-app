@@ -183,7 +183,11 @@ export default function Form({ serie, genres }: { serie?: any, genres: any }) {
                     },
                 });
 
+                console.log(uploadResponse)
+
                 const uploadData = await uploadResponse.json();
+
+                console.log(uploadData)
 
                 if (!uploadResponse.ok) {
                     throw new Error(uploadData.error || `Erro ao enviar a imagem ${type}.`);
