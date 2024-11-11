@@ -18,6 +18,8 @@ const subTypes = Object.keys(SerieSubtype).map((key) => ({
     label: key.charAt(0) + key.slice(1).toLowerCase(), // Formata o label, ex: "NOVEL" -> "Novel"
 }));
 
+const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN || 'TEMPORARIO';
+
 export default function Form({ serie, genres }: { serie?: any, genres: any }) {
     const router = useRouter()
     const [formData, setFormData] = useState({
@@ -179,7 +181,7 @@ export default function Form({ serie, genres }: { serie?: any, genres: any }) {
                     method: 'POST',
                     body: imageFormData,
                     headers: {
-                        Authorization: 'TEMPORARIO',
+                        Authorization: token,
                     },
                 });
 

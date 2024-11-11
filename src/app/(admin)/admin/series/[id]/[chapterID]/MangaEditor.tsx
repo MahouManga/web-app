@@ -19,6 +19,8 @@ interface ImageItem {
     imageURL?: string;
 }
 
+const token = process.env.NEXT_PUBLIC_ACCESS_TOKEN || 'TEMPORARIO';
+
 const SortableItem = ({ id, src, imageURL, isUploaded, onRemove, index }: ImageItem & { onRemove: (id: string) => void, index: number }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
@@ -164,7 +166,7 @@ export default function MangaEditor({ serie, chapter, formData, chapterID, edito
             await fetch("/images/upload-images", {
                 method: "POST",
                 headers: {
-                    Authorization: 'TEMPORARIO',
+                    Authorization: token,
                 },
                 body: data,
             });
@@ -189,7 +191,7 @@ export default function MangaEditor({ serie, chapter, formData, chapterID, edito
             let response = await fetch("/images/upload-zip", {
                 method: "POST",
                 headers: {
-                    Authorization: 'TEMPORARIO',
+                    Authorization: token,
                 },
                 body: data,
             });
