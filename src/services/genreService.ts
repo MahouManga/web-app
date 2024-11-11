@@ -43,7 +43,7 @@ export const getGenres2 = async (): Promise<Genre[]> => {
         const genres = await prisma.genre.findMany();
         return genres;
     } catch (error) {
-        throw new Error("Failed to fetch genres");
+        return [];
     }
 }
 

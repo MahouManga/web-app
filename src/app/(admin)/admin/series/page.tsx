@@ -8,7 +8,7 @@ export const metadata = {
 
 export default async function Page() {
   // Busque os gêneros no servidor
-  const genres: Genre[] = await getGenres2();
+  const genres: Genre[] = await getGenres2() || [];
 
   return (<SearchPage genres={genres} />);
 }
