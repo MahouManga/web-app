@@ -10,7 +10,7 @@ const nextConfig = {
 	  return [
 		{
 		  source: '/images/:path*',
-		  destination: 'http://api-image:4001/:path*', // Remove '/images' do destino
+		  destination: 'http://api:4001/:path*', // Remove '/images' do destino
 		},
 	  ];
 	},
