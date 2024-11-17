@@ -8,8 +8,8 @@ export default async function NavBar() {
     const menu = [
         {
             title: 'Obras', link: '/', children: [
-                { title: 'Mangas', link: '/' },
-                { title: 'Novels', link: '/' }
+                { title: 'Mangas', link: '/search' },
+                { title: 'Novels', link: '/search' }
             ]
         },
         { title: 'Recentes', link: '/' },

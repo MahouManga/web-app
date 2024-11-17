@@ -30,7 +30,7 @@ export async function getChapterID(id: string): Promise<Chapter | null> {
 export async function createNovelChapter(chapterData: any) {
     const { title, index, volume, type, serieID, contentText, userId } = chapterData
     console.log(type)
-    
+
     const newchapter = await prisma.chapter.create({
         data: {
             title,
@@ -54,7 +54,7 @@ export async function createNovelChapter(chapterData: any) {
 export async function createMangaChapter(chapterData: any) {
     const { title, index, volume, type, serieID, userId } = chapterData
     console.log(type)
-    
+
     const newchapter = await prisma.chapter.create({
         data: {
             title,
@@ -84,7 +84,7 @@ export async function updateMangaChapter(chapterData: any) {
     }
 
     let contentId: string;
-    
+
     // Se o conteúdo não existir, crie um novo conteúdo para o capítulo
     if (!existingChapter.content) {
         const newContent = await prisma.chapterContent.create({
@@ -171,7 +171,7 @@ export async function updateMangaChapter(chapterData: any) {
 export async function updateNovelChapter(chapterData: any) {
     const { title, index, volume, type, id, contentText } = chapterData;
     console.log(type)
-    
+
     const newchapter = await prisma.chapter.update({
         where: { id: id },
         data: {
@@ -188,4 +188,45 @@ export async function updateNovelChapter(chapterData: any) {
         }
     });
     return newchapter
+}
+
+export async function deleteChapter(body:any) {
+    const { id, userId } = body;
+    try {
+
+        const chapter = await prisma.chapter.findFirst({
+            where: { id: id },
+            include: {
+                content: {
+                    include: {
+                        pages: true,
+                    },
+                },
+            },
+        });
+
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+
+        if (!chapter) {
+            throw new Error("Chapter not found.");
+        }
+
+        if (chapter.userId !== userId && user?.role !== "ADMIN") {
+            throw new Error("You don't have permission to delete this chapter.");
+        }
+
+        const chapterContent = await prisma.chapterContent.findFirst({ where: { chapterID: chapter.id } });
+
+        if (chapterContent) {
+            await prisma.page.deleteMany({ where: { chapterContentId: chapterContent.id } });
+            await prisma.chapterContent.delete({ where: { id: chapterContent.id } });
+        }
+
+        await prisma.chapter.delete({ where: { id: chapter.id } });
+
+        return { success: true, message: "Chapter deleted successfully." };
+    } catch (error: any) {
+        console.error("Error deleting chapter:", error);
+        return { success: false, message: "Error deleting chapter.", error: error.message };
+    }
 }

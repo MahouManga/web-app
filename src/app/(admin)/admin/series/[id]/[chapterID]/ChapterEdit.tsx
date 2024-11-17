@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import MangaEditor from "./MangaEditor";
 import NovelEditor from "./NovelEditor";
+import { redirect } from "next/navigation";
 
 export default function ChapterEdit({ user, serie, chapter, chapterID, }: any) {
     const [editorState, setEditorState] = useState<string>(serie.type)
@@ -33,10 +34,11 @@ export default function ChapterEdit({ user, serie, chapter, chapterID, }: any) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ id: chapterID }),
+                body: JSON.stringify({ id: chapterID, userId: user.id }),
             });
             if (response.ok) {
                 console.log('LETWS GOO')
+                redirect(`/admin/series/${serie.id}`);
             } else {
                 console.error('Error deleting chapter:', response.statusText);
             }
