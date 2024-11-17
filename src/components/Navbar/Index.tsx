@@ -1,8 +1,10 @@
 import ThemeSwitch from "@/components/ThemeSwitch";
 import Profile from "./Profile";
 import Link from "next/link";
+import { validateRequest } from "@/lib/auth";
 
 export default async function NavBar() {
+    const { user } = await validateRequest();
     const menu = [
         {
             title: 'Obras', link: '/', children: [
@@ -12,7 +14,7 @@ export default async function NavBar() {
         },
         { title: 'Recentes', link: '/' },
         { title: 'Fórum', link: '/forum' },
-        { title: 'Admininstração', link: '/admin' }
+        user ? { title: 'Painel', link: '/admin' } : {}
     ];
     return (
         <div className="bg-base-100 flex justify-center text-base-content">
@@ -35,7 +37,7 @@ export default async function NavBar() {
                         </div>
                         <ul
                             tabIndex={0}
-                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[99] mt-3 w-52 p-2 shadow">
                             {
                                 menu.map((item, index) => (
                                     item.children ?
@@ -49,7 +51,7 @@ export default async function NavBar() {
                                                 }
                                             </ul>}
                                         </li>
-                                        : <li key={index}>
+                                        : item.title && <li key={index}>
                                             <a key={index} href={item.link}>{item.title}</a>
                                         </li>
                                 ))

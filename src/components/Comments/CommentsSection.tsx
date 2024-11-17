@@ -156,6 +156,8 @@ export default function CommentsSection({ itemId, user, type }: any) {
             <Image
               src={reply.user.image || "/noImage.jpg"}
               alt="Avatar"
+              width={40}
+              height={40}
               className={`w-${level === 1 ? 10 : 8} h-${level === 1 ? 10 : 8} rounded-full`}
             />
             <div className="flex-1">
@@ -218,38 +220,40 @@ export default function CommentsSection({ itemId, user, type }: any) {
       {/* Lista de Comentários */}
       <div>
         {comments.map((comment) => (
-          <div key={comment.id} className="mb-6">
+          <div key={comment.id} className="mb-6 text-base-content">
             <div className="flex items-start space-x-4">
-              <div className="flex items-start w-full">
+              <div className="flex items-start w-full space-x-2">
                 <Image
                   src={comment.user.image || "/noImage.jpg"}
                   alt="Avatar"
+                  width={40}
+                  height={40}
                   className="w-10 h-10 rounded-full"
                 />
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-white">{comment.user.name}</span>
-                      <span className="text-gray-500 text-sm">{new Date(comment.createdAt).toLocaleString()}</span>
+                      <span className="font-semibold">{comment.user.name}</span>
+                      <span className="text-sm">{new Date(comment.createdAt).toLocaleString()}</span>
                     </div>
-                    <button onClick={() => toggleCollapse(comment.id)} className="text-gray-400 hover:text-white">
+                    <button onClick={() => toggleCollapse(comment.id)} className="hover:text-info">
                       {collapsedComments[comment.id] ? <FaPlus /> : <FaMinus />}
                     </button>
                   </div>
                   {!collapsedComments[comment.id] && (
                     <>
-                      <p className="text-gray-300 whitespace-pre-line topic-post" dangerouslySetInnerHTML={{ __html: comment.content }}></p>
+                      <p className="whitespace-pre-line topic-post" dangerouslySetInnerHTML={{ __html: comment.content }}></p>
                       <div className="flex items-center space-x-4 mt-2">
                         <button
                           onClick={() => handleLike(comment.id)}
-                          className="text-gray-400 hover:text-white flex items-center space-x-1"
+                          className="hover:text-info flex items-center space-x-1"
                         >
                           <MdThumbUp /> <span>{comment.likes || 0}</span>
                         </button>
-                        <button onClick={() => handleDislike(comment.id)} className="text-gray-400 hover:text-white flex items-center space-x-1">
+                        <button onClick={() => handleDislike(comment.id)} className="hover:text-info flex items-center space-x-1">
                           <MdThumbDown /> <span>{comment.dislikes || 0}</span>
                         </button>
-                        <button onClick={() => setReplyingTo(comment.id)} className="text-gray-400 hover:text-white">Responder</button>
+                        <button onClick={() => setReplyingTo(comment.id)} className="hover:text-info">Responder</button>
                       </div>
 
                       {replyingTo === comment.id && <SenderComponent parentId={comment.id} handleAddReply={handleAddReply} />}

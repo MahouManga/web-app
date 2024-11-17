@@ -8,6 +8,12 @@ export async function getChapters(id: number): Promise<Chapter[]> {
     });
 }
 
+export async function getChaptersByUserID(id: string, serieID: number): Promise<Chapter[]> {
+    return await prisma.chapter.findMany({
+        where: { serieID: serieID, userId: id }
+    });
+}
+
 export async function getChapterID(id: string): Promise<Chapter | null> {
     return await prisma.chapter.findUnique({
         where: { id },
@@ -22,7 +28,7 @@ export async function getChapterID(id: string): Promise<Chapter | null> {
 }
 
 export async function createNovelChapter(chapterData: any) {
-    const { title, index, volume, type, serieID, contentText } = chapterData
+    const { title, index, volume, type, serieID, contentText, userId } = chapterData
     console.log(type)
     
     const newchapter = await prisma.chapter.create({
@@ -32,6 +38,7 @@ export async function createNovelChapter(chapterData: any) {
             volume: Number(volume),
             type,
             serieID,
+            userId,
             content: {
                 create: {
                     type: type,
@@ -45,7 +52,7 @@ export async function createNovelChapter(chapterData: any) {
 }
 
 export async function createMangaChapter(chapterData: any) {
-    const { title, index, volume, type, serieID } = chapterData
+    const { title, index, volume, type, serieID, userId } = chapterData
     console.log(type)
     
     const newchapter = await prisma.chapter.create({
@@ -55,6 +62,7 @@ export async function createMangaChapter(chapterData: any) {
             volume: Number(volume),
             type,
             serieID,
+            userId
         }
     });
 

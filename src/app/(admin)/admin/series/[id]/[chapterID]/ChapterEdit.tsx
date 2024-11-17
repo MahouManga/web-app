@@ -14,7 +14,8 @@ export default function ChapterEdit({ user, serie, chapter, chapterID, }: any) {
         index: chapter ? chapter.index : 0,
         volume: chapter ? chapter.volume : 0,
         creatorID: 0,
-        serieID: serie.id
+        serieID: serie.id,
+        userId: user.id,
     })
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

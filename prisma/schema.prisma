@@ -45,6 +45,7 @@ model User {
   following Follower[] @relation("Following")
   followers Follower[] @relation("Followers")
   Report    Report[]
+  Chapter   Chapter[]
 }
 
 model Follower {
@@ -165,6 +166,8 @@ model Chapter {
   views           Int                @default(0)
   serieID         Int
   serie           Serie?             @relation(fields: [serieID], references: [id], onDelete: Cascade)
+  userId          String
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   content         ChapterContent?
   UserReadHistory UserReadHistory[]
   Comments        Comments[]
