@@ -48,7 +48,6 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                                     ${Menu.gap ? "mt-10" : "mt-4"} ${index === 0 && "bg-base-100"}
                                     `}
                             >
-                                {console.log('Rendering menu item:', Menu.title)}
                                 <Menu.src size={24} className="text-secondary group-hover:text-primary-content" />
                                 <span className="text-lg origin-left duration-300 font-medium"> {Menu.title} </span>
                             </li>
@@ -61,7 +60,6 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                 <div className="md:hidden flex justify-end items-center p-4 bg-base-100 border-b border-gray-300">
                     <SidebarHeader user={user} />
                 </div>
-                {console.log('Rendering SidebarHeader with user:', user)}
                 <div className="hidden md:block">
                     <SidebarHeader user={user} />
                 </div>
