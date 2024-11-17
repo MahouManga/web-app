@@ -11,8 +11,8 @@ const ChapterContentType = { // Novel or Manga
 
 export default async function Page({ params }: { params: Params }) {
     const { id, chapterID } = params
-    
-    const user = validateRequest();
+
+    const { user } = await validateRequest();
     const serie = await getSerie(Number(id));
     const chapter = await getChapterID(chapterID);
 
