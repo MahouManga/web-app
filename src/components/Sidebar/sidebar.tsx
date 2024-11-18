@@ -26,7 +26,7 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
         <div className="flex text-base-content bg-base-200">
             {/* Mobile Sidebar Toggle Button */}
             <div className="md:hidden fixed top-4 left-4 z-20">
-                <button className="p-2 bg-black text-primary-content rounded-full" onClick={() => setIsMobileOpen(!isMobileOpen)}>
+                <button className="p-2 bg-primary text-secundary-content rounded-full" onClick={() => setIsMobileOpen(!isMobileOpen)}>
                     <IoMenu size={24} />
                 </button>
             </div>
