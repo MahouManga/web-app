@@ -364,3 +364,23 @@ export const getSeriesRecently = async (): Promise<SerieDataList> => {
         };
     }
 }
+
+export const getRandomSerie = async (): Promise<Serie | null> => {
+    // Obtenha o número total de novels no banco de dados
+    const count = await prisma.serie.count();
+
+    if (count === 0) {
+        return null; // Retorna null se não houver novels no banco de dados
+    }
+
+    // Gere um número aleatório para selecionar um índice
+    const randomIndex = Math.floor(Math.random() * count);
+
+    // Busque uma novel aleatória
+    const randomNovel = await prisma.serie.findMany({
+        take: 1,
+        skip: randomIndex,
+    });
+
+    return randomNovel.length > 0 ? randomNovel[0] : null;
+};

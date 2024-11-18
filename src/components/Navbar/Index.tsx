@@ -2,14 +2,16 @@ import ThemeSwitch from "@/components/ThemeSwitch";
 import Profile from "./Profile";
 import Link from "next/link";
 import { validateRequest } from "@/lib/auth";
+import { getRandomSerie } from "@/services/serieService";
 
 export default async function NavBar() {
     const { user } = await validateRequest();
+    const random = await getRandomSerie() as any;
     const menu = [
         {
             title: 'Obras', link: '/'
         },
-        { title: 'Recentes', link: '/' },
+        { title: 'Random', link: `/series/${random.id}/${random.slug}` },
         { title: 'Fórum', link: '/forum' },
         user ? { title: 'Painel', link: '/admin' } : {}
     ];
