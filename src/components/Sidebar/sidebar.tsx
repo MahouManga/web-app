@@ -36,11 +36,7 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                     <Link href="/" className="font-bold text-xl text-center cursor-pointer">
                         Mahou Admin
                     </Link>
-<<<<<<< HEAD
                     <button className="md:hidden p-2 text-secondary" onClick={() => setIsMobileOpen(false)}>
-=======
-                    <button className="md:hidden p-2 text-content" onClick={() => setIsMobileOpen(false)}>
->>>>>>> c9e490b55ab99a73641ae2c54012d68b4fd0f8ab
                         X
                     </button>
                 </div>
