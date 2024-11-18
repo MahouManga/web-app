@@ -164,7 +164,7 @@ export const getSeries = async (
         if (orderBy === 'chapterCount') {
             order = {
                 chapters: {
-                    _count: sort,
+                    _count: sort || 'asc',
                 },
             };
         } else {

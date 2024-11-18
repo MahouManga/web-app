@@ -209,13 +209,35 @@ export async function unmarkChapterAsRead(userId: string, chapterID: string) {
 
 export async function getUserSeriesAndChapterStats(userId: string) {
     try {
-        // Contagem total de séries por tipo
-        const seriesCountByType = await prisma.serie.groupBy({
-            by: ['type'],
-            _count: {
-                id: true,
+        // Busca todas as séries associadas ao usuário, incluindo o tipo de série
+        const userSeries = await prisma.userLibrary.findMany({
+            where: {
+                userId,
+                OR: [
+                    { bookmark: true },
+                    { notification: true },
+                    { status: { gte: 0 } },
+                    { rating: { not: null } }, // Verif'        ica se rating não é null
+                ],
+            },
+            include: {
+                serie: {
+                    select: {
+                        type: true,
+                    },
+                },
             },
         });
+
+        // Conta séries por tipo
+        const seriesCountByType = userSeries.reduce(
+            (counts, entry) => {
+                if (entry.serie.type === 'NOVEL') counts.NOVEL++;
+                if (entry.serie.type === 'MANGA') counts.MANGA++;
+                return counts;
+            },
+            { NOVEL: 0, MANGA: 0 }
+        );
 
         // Busca todos os registros de capítulos lidos para o usuário, junto com o tipo de série
         const userChaptersRead = await prisma.userReadHistory.findMany({
@@ -237,10 +259,7 @@ export async function getUserSeriesAndChapterStats(userId: string) {
 
         // Processa os dados para retornar em um formato mais simples
         const result = {
-            totalSeries: {
-                NOVEL: seriesCountByType.find((item) => item.type === 'NOVEL')?._count.id || 0,
-                MANGA: seriesCountByType.find((item) => item.type === 'MANGA')?._count.id || 0,
-            },
+            totalSeries: seriesCountByType,
             totalChaptersRead: chaptersReadCount,
         };
 
@@ -251,12 +270,19 @@ export async function getUserSeriesAndChapterStats(userId: string) {
     }
 }
 
+
 export async function getUserSeriesByType(userId: string, type: 'NOVEL' | 'MANGA') {
     try {
         // Consulta todas as séries do tipo especificado no UserLibrary do usuário
         const userSeries = await prisma.userLibrary.findMany({
             where: {
                 userId,
+                OR: [
+                    { bookmark: true },
+                    { notification: true },
+                    { status: { gte: 0 } },
+                    { rating: { not: null } }, // Verifica se rating não é null
+                ],
                 serie: {
                     type,
                 },

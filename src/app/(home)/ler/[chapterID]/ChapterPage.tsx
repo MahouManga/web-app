@@ -9,8 +9,9 @@ import { IoIosArrowForward } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
 import NewBadge from "@/components/NewBadge";
 import MangaLoader from "./Manga";
+import CommentsSection from "@/components/Comments/CommentsSection";
 
-export default function ChapterPage({ serie, chapter, previousChapter, nextChapter }: any) {
+export default function ChapterPage({ user, serie, chapter, previousChapter, nextChapter }: any) {
     const router = useRouter();
 
     return (
@@ -31,7 +32,7 @@ export default function ChapterPage({ serie, chapter, previousChapter, nextChapt
                 </div>
                 <ContentLoader serie={serie} chapter={chapter} previousChapter={previousChapter} nextChapter={nextChapter} />
                 <div className='flex flex-col justify-center md:mr-11'>
-                    Comentários aqui?
+                    <CommentsSection itemId={chapter.id} user={user} type={"serie"} />
                 </div>
             </main>
         </>
@@ -55,8 +56,9 @@ function ChapterHeader({ serie, chapter, previousChapter, nextChapter }: any) {
         <nav className='flex'>
             <div className='flex flex-row container justify-center lg:justify-between items-center mb-4 shadow-xl'>
                 <div className='flex flex-row gap-x-3 justify-center grow-0 py-3 rounded self-start'>
-                    <a href={previousChapter ? `/series/${serie.id}/ler/vol-${previousChapter.volume}-cap-${previousChapter.index}` : undefined}>
-                        <button className="btn btn-outline px-2">
+                    <a href={previousChapter ? `/ler/${previousChapter.id}` : undefined}>
+                        <button className="btn btn-outline px-2"
+                        disabled={!previousChapter}>
                             <IoChevronBackOutline size={25} />
                         </button>
                     </a>
@@ -78,8 +80,10 @@ function ChapterHeader({ serie, chapter, previousChapter, nextChapter }: any) {
                     <label htmlFor="my-drawer" className="btn btn-outline px-2">
                         <GrUnorderedList size={23} /> Capitulos
                     </label>
-                    <a href={nextChapter ? `/series/${serie.id}/ler/vol-${nextChapter.volume}-cap-${nextChapter.index}` : undefined}>
-                        <button className='btn btn-outline px-2'>
+                    <a href={nextChapter ? `/ler/${nextChapter.id}` : undefined}>
+                        <button className='btn btn-outline px-2'
+                            disabled={!nextChapter}
+                        >
                             <IoIosArrowForward size={25} />
                         </button>
                     </a>
@@ -126,12 +130,12 @@ function ChaptersDrawer({ serie, chapter }: any) {
         };
     }, [chapters]);
 
-    const sortedChapters = chapters.sort((a: any, b: any) => {
+    const sortedChapters = chapters ? chapters.sort((a: any, b: any) => {
         if (a.volume === b.volume) {
             return a.index - b.index;
         }
         return a.volume - b.volume;
-    });
+    }) : []
 
     return (
         <div className="drawer drawer-end z-99999">

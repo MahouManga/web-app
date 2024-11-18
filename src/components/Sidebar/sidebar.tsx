@@ -9,11 +9,11 @@ import Image from "next/image";
 export default function SidebarBase({ children, user }: { children: React.ReactNode, user: any }) {
     console.log('Rendering SidebarBase component');
     const Menus = [
-        { title: "Dashboard", src: IoBarChart, link: '/' },
+        { title: "Dashboard", src: IoBarChart, link: '/admin' },
         { title: "Obras", src: IoBook, link: '/admin/series', gap: true },
         { title: "Criar Obra", src: IoAddCircle, link: '/admin/series/create' },
-        { title: "Gêneros", src: IoBookmarks, link: '/admin/genres', gap: true },
-        { title: "Tags", src: IoPricetagSharp, link: '/admin/tags' },
+        { title: "Gêneros", src: IoBookmarks, link: '/admin/genres', gap: true, admin:true },
+        { title: "Tags", src: IoPricetagSharp, link: '/admin/tags', admin:true },
         { title: "Forum", src: IoPeople, link: '/admin/forum', gap: true, admin: true },
         { title: "Reports", src: IoWarningSharp, link: '/admin/reports', gap: true, admin: true }
     ];
@@ -26,7 +26,7 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
         <div className="flex text-base-content bg-base-200">
             {/* Mobile Sidebar Toggle Button */}
             <div className="md:hidden fixed top-4 left-4 z-20">
-                <button className="p-2 bg-primary text-secundary-content rounded-full" onClick={() => setIsMobileOpen(!isMobileOpen)}>
+                <button className="p-2 bg-primary text-secondary-content rounded-full" onClick={() => setIsMobileOpen(!isMobileOpen)}>
                     <IoMenu size={24} />
                 </button>
             </div>
@@ -36,7 +36,7 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                     <Link href="/" className="font-bold text-xl text-center cursor-pointer">
                         Mahou Admin
                     </Link>
-                    <button className="md:hidden p-2 text-black" onClick={() => setIsMobileOpen(false)}>
+                    <button className="md:hidden p-2 text-secondary" onClick={() => setIsMobileOpen(false)}>
                         X
                     </button>
                 </div>

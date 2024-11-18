@@ -116,7 +116,7 @@ export default function NovelLoader({ chapter, previousChapter, nextChapter }: {
         <div ref={chapterRef} className="flex flex-col items-center justify-center max-w-screen-xl md:mr-11">
           {/* First half of the content */}
           <div
-            className={`chapter-section ql-container ql-snow ${getAlignmentClass(currentAlignment)}`}
+            className={`chapter-section ${getAlignmentClass(currentAlignment)}`}
             style={{ fontSize: `${fontSize}px` }}
             dangerouslySetInnerHTML={{ __html: contentWithImageFallback }}
           />
@@ -127,7 +127,7 @@ export default function NovelLoader({ chapter, previousChapter, nextChapter }: {
             <ul className="flex items-center justify-around w-full md:space-y-6 md:flex-col">
               <li>
                 <a
-                  href={previousChapter ? `/series/${chapter.serieID}/ler/vol-${previousChapter.volume}-cap-${previousChapter.index}` : undefined}
+                  href={previousChapter ? `/ler/${previousChapter.id}` : undefined}
                   className={`transition-opacity ${!previousChapter ? 'pointer-events-none opacity-50' : 'opacity-100'}`}
                 >
                   <FaAnglesLeft />
@@ -156,7 +156,7 @@ export default function NovelLoader({ chapter, previousChapter, nextChapter }: {
               </li>
               <li>
                 <a
-                  href={nextChapter ? `/series/${chapter.serieID}/ler/vol-${nextChapter.volume}-cap-${nextChapter.index}` : undefined}
+                  href={nextChapter ? `/ler/${nextChapter.id}` : undefined}
                   className={`transition-opacity ${!nextChapter ? 'pointer-events-none opacity-50' : 'opacity-100'}`}
                 >
                   <FaAnglesRight />

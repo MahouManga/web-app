@@ -30,7 +30,8 @@ export default function GenrePage({ data }: GenrePageProps) {
         id: -1,
         name: '',
     })
-    const [deleteNumber, setDeleteNumber] = useState(0)
+    const [deleteNumber, setDeleteNumber] = useState(0);
+    const [isAscending, setIsAscending] = useState<boolean>(true);
 
     const handleSubmitNewTodo = async () => {
 
@@ -130,9 +131,13 @@ export default function GenrePage({ data }: GenrePageProps) {
         }
     }
 
-    const filteredItems = generos.filter((item) => {
-        return item.name.toLowerCase().includes(search.toLowerCase());
-    });
+    const filteredItems = generos
+        .filter((item) => item.name.toLowerCase().includes(search.toLowerCase()))
+        .sort((a, b) => isAscending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+
+    const toggleSortOrder = () => {
+        setIsAscending(!isAscending);
+    };
 
     return (
         <div>
@@ -158,10 +163,11 @@ export default function GenrePage({ data }: GenrePageProps) {
                             </button>
                             <div className="flex items-center space-x-3 w-full md:w-auto">
                                 <div id="filterDropdownButton" data-dropdown-toggle="filterDropdown" className="w-full md:w-auto flex items-center justify-center text-sm font-medium focus:outline-none rounded-lg">
-                                    <select defaultValue="AZ" className="select w-full max-w-xs">
-                                        <option value="AZ">A - Z</option>
-                                        <option value="ZA">Z - A</option>
-                                    </select>
+                                <div className="flex items-center space-x-3 w-full md:w-auto">
+                                <button onClick={toggleSortOrder} className="btn btn-outline">
+                                    {isAscending ? 'A - Z' : 'Z - A'}
+                                </button>
+                            </div>
                                 </div>
                             </div>
                         </div>

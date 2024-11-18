@@ -139,7 +139,15 @@ export async function getUserForumPosts(userId: string, page: number = 1, limit:
         include: {
             user: true,   // Inclui informações do autor do post
             thread: true, // Inclui informações da thread associada
-            citedPosts: true, // Inclui as postagens que este post cita
+            citedPosts: {
+                include: {
+                    citedPost: {
+                        include: {
+                            user: true, // Inclui informações do autor do post citado
+                        },
+                    },
+                }
+            }, // Inclui as postagens que este post cita
         },
     });
 

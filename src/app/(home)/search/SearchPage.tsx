@@ -34,6 +34,9 @@ export default function SearchPage({ genres }: { genres: Genre[] }) {
                     genre: query.genre,
                 });
 
+
+                console.log(params)
+
                 const res = await fetch(`/api/series?${params.toString()}`);
                 const result = await res.json();
                 setData(result.data || []);

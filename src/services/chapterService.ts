@@ -230,3 +230,95 @@ export async function deleteChapter(body:any) {
         return { success: false, message: "Error deleting chapter.", error: error.message };
     }
 }
+
+interface ChapterNavigationResponse {
+    previousChapter?: Chapter;
+    nextChapter?: Chapter;
+    error?: {
+        message: string;
+        status: number;
+        error?: any;
+    };
+}
+
+export const getAdjacentChapters = async (
+    serieID: number,
+    volume: number,
+    index: number
+): Promise<ChapterNavigationResponse> => {
+    try {
+        // Encontrar o capítulo anterior
+        let previousChapter = await prisma.chapter.findFirst({
+            where: {
+                serieID,
+                volume,
+                index: {
+                    lt: index
+                }
+            },
+            orderBy: {
+                index: 'desc'
+            },
+        });
+
+        // Se não houver capítulo anterior no mesmo volume, buscar no volume anterior
+        if (!previousChapter) {
+            previousChapter = await prisma.chapter.findFirst({
+                where: {
+                    serieID,
+                    volume: {
+                        lt: volume
+                    }
+                },
+                orderBy: [
+                    { volume: 'desc' },
+                    { index: 'desc' }
+                ],
+            });
+        }
+
+        // Encontrar o próximo capítulo
+        let nextChapter = await prisma.chapter.findFirst({
+            where: {
+                serieID,
+                volume,
+                index: {
+                    gt: index
+                }
+            },
+            orderBy: {
+                index: 'asc'
+            },
+        });
+
+        // Se não houver próximo capítulo no mesmo volume, buscar no próximo volume
+        if (!nextChapter) {
+            nextChapter = await prisma.chapter.findFirst({
+                where: {
+                    serieID,
+                    volume: {
+                        gt: volume
+                    }
+                },
+                orderBy: [
+                    { volume: 'asc' },
+                    { index: 'asc' }
+                ],
+            });
+        }
+
+        return {
+            previousChapter: previousChapter ?? undefined,
+            nextChapter: nextChapter ?? undefined,
+        };
+    } catch (error) {
+        console.error('Error getting adjacent chapters:', error);
+        return {
+            error: {
+                message: "Error getting adjacent chapters",
+                status: 500,
+                error: error,
+            }
+        };
+    }
+}

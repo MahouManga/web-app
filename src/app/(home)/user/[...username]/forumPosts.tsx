@@ -36,10 +36,10 @@ export default async function ForumPostsPage({ user, searchParams }: ForumPostsP
                                 <h3 className="text-sm font-semibold text-gray-500">Citações:</h3>
                                 {post.citedPosts.map((cited:any) => (
                                     <div key={cited.id} className="text-sm text-gray-500 italic">
-                                        <span className="font-semibold">{cited.user.name} disse:</span>
+                                        <span className="font-semibold">{cited.citedPost.user.name} disse:</span>
                                         <div
                                             className="mt-1 topic-post"
-                                            dangerouslySetInnerHTML={{ __html: cited.content }}
+                                            dangerouslySetInnerHTML={{ __html: cited.citedPost.content }}
                                         />
                                     </div>
                                 ))}

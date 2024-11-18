@@ -65,15 +65,14 @@ export default function CommentsSection({ itemId, user, type }: any) {
       } else {
         setLoadingMore(true);
       }
-  
+
       const response = await fetch(`/api/comments?itemId=${itemId}&type=${type}&page=${currentPage}&limit=${COMMENTS_PER_PAGE}`);
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         if (data.comments.length < COMMENTS_PER_PAGE) {
           setHasMore(false);
         }
-  
+
         if (append) {
           setComments((prevComments) => [...prevComments, ...data.comments]);
         } else {
@@ -92,7 +91,7 @@ export default function CommentsSection({ itemId, user, type }: any) {
       }
     }
   }, [itemId, type]);
-  
+
   // useEffect para carregar comentários na montagem do componente
   useEffect(() => {
     fetchComments(1);
@@ -203,9 +202,12 @@ export default function CommentsSection({ itemId, user, type }: any) {
   return (
     <div className="w-full max-w-5xl mx-auto p-6 rounded-lg">
       {/* Campo de entrada de novo comentário */}
-      <div className="mb-4">
+      {user ? <div className="mb-4">
         <SenderComponent handleAddReply={handleAddReply} parentId={null} />
+      </div> : <div className='mb-4 flex items-center text-center justify-center'>
+        <p>Conecte-se para poder comentar!!</p>
       </div>
+      }
 
       {/* Opções de Ordenação */}
       <div className="flex justify-between items-center mb-4">

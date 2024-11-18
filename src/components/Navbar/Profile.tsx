@@ -31,7 +31,7 @@ export default async function Profile () {
                         <span className="badge bg-base-300">New</span>
                     </a>
                 </li>
-                <li key='settings'><a>Configurações</a></li>
+                <li key='settings'><a href='/config'>Configurações</a></li>
                 <li key='logout'>
                     <form action={logout}>
                         <button>Deslogar</button>

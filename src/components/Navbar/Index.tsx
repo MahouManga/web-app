@@ -7,10 +7,7 @@ export default async function NavBar() {
     const { user } = await validateRequest();
     const menu = [
         {
-            title: 'Obras', link: '/', children: [
-                { title: 'Mangas', link: '/search' },
-                { title: 'Novels', link: '/search' }
-            ]
+            title: 'Obras', link: '/'
         },
         { title: 'Recentes', link: '/' },
         { title: 'Fórum', link: '/forum' },
@@ -40,20 +37,9 @@ export default async function NavBar() {
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[99] mt-3 w-52 p-2 shadow">
                             {
                                 menu.map((item, index) => (
-                                    item.children ?
-                                        <li key={index}>
-                                            <a>{item.title}</a>
-                                            {item.children && <ul className="p-2">
-                                                {
-                                                    item.children.map((child, index) => (
-                                                        <li key={index}><a>{child.title}</a></li>
-                                                    ))
-                                                }
-                                            </ul>}
-                                        </li>
-                                        : item.title && <li key={index}>
-                                            <a key={index} href={item.link}>{item.title}</a>
-                                        </li>
+                                    item.title && <li key={index}>
+                                        <a key={index} href={item.link}>{item.title}</a>
+                                    </li>
                                 ))
                             }
                         </ul>
@@ -64,20 +50,7 @@ export default async function NavBar() {
                     <ul className="menu menu-horizontal px-1">
                         {
                             menu.map((item, index) => (
-                                item.children ?
-                                    <li key={index}>
-                                        <details>
-                                            <summary>{item.title}</summary>
-                                            <ul className="p-2">
-                                                {
-                                                    item.children.map((child, index) => (
-                                                        <li key={index}><a href={child.link}>{child.title}</a></li>
-                                                    ))
-                                                }
-                                            </ul>
-                                        </details>
-                                    </li>
-                                    : <li key={index}><a href={item.link}>{item.title}</a></li>
+                                item.title && <li key={index}><a href={item.link}>{item.title}</a></li>
                             ))
                         }
                     </ul>
