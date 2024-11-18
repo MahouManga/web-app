@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { IoBarChart, IoPeople, IoBook, IoPricetagSharp, IoBookmarks, IoAddCircle, IoWarningSharp, IoMenu } from "react-icons/io5";
-import SidebarHeader from "./header";   
+import SidebarHeader from "./header";
 import { Toaster } from "sonner";
 import Image from "next/image";
 
@@ -14,8 +14,8 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
         { title: "Criar Obra", src: IoAddCircle, link: '/admin/series/create' },
         { title: "Gêneros", src: IoBookmarks, link: '/admin/genres', gap: true },
         { title: "Tags", src: IoPricetagSharp, link: '/admin/tags' },
-        { title: "Forum", src: IoPeople, link: '/admin/forum', gap: true },
-        { title: "Reports", src: IoWarningSharp, link: '/admin/reports', gap: true }
+        { title: "Forum", src: IoPeople, link: '/admin/forum', gap: true, admin: true },
+        { title: "Reports", src: IoWarningSharp, link: '/admin/reports', gap: true, admin: true }
     ];
 
     console.log('Menus:', Menus);
@@ -31,7 +31,7 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                 </button>
             </div>
             {/* Sidebar */}
-            <div className={`fixed top-0 ${isMobileOpen ? 'left-0' : '-left-full'} md:left-0 w-64 flex flex-col bg-base-300 h-full p-5 pt-8 shadow-lg z-30 transition-all duration-300 ease-in-out`}>                
+            <div className={`fixed top-0 ${isMobileOpen ? 'left-0' : '-left-full'} md:left-0 w-64 flex flex-col bg-base-300 h-full p-5 pt-8 shadow-lg z-30 transition-all duration-300 ease-in-out`}>
                 <div className="flex flex-row items-center justify-between pb-4 border-b border-gray-600">
                     <Link href="/" className="font-bold text-xl text-center cursor-pointer">
                         Mahou Admin
@@ -42,7 +42,7 @@ export default function SidebarBase({ children, user }: { children: React.ReactN
                 </div>
                 <ul className="pt-8">
                     {Menus.map((Menu, index) => (
-                        <Link href={Menu.link} key={index} className="group">
+                        Menu.admin && user.role !== 'ADMIN' ? null :<Link href={Menu.link} key={index} className="group">
                             <li
                                 className={`flex hover:bg-primary hover:text-primary-content p-3 rounded-lg cursor-pointer text-sm items-center gap-x-4 transition-all
                                     ${Menu.gap ? "mt-10" : "mt-4"} ${index === 0 && "bg-base-100"}
